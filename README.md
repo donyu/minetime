@@ -1,4 +1,5 @@
 minetime
+<<<<<<< HEAD
 ========
 
 PLT Project Spring '13
@@ -10,3 +11,6 @@ System Architect:           Don
 System Integrator:          Patrice
 Tester/Validator:           Stephen
 
+=======
+========
+>>>>>>> d9c0201491c005f487946c82bc713509eaf637a8
