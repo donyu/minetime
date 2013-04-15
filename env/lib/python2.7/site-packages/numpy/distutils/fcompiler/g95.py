@@ -1,1 +1,0 @@
-../../../../../../share/pyshared/numpy/distutils/fcompiler/g95.py

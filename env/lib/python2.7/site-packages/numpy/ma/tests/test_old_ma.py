@@ -1,1 +1,0 @@
-../../../../../../share/pyshared/numpy/ma/tests/test_old_ma.py

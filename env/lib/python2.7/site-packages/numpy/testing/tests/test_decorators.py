@@ -1,1 +1,0 @@
-../../../../../../share/pyshared/numpy/testing/tests/test_decorators.py

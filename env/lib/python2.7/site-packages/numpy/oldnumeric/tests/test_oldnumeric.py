@@ -1,1 +1,0 @@
-../../../../../../share/pyshared/numpy/oldnumeric/tests/test_oldnumeric.py

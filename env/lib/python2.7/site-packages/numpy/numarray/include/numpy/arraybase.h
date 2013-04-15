@@ -1,1 +1,0 @@
-../../../../../../../share/pyshared/numpy/numarray/include/numpy/arraybase.h

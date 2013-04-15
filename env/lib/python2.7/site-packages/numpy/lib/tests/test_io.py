@@ -1,1 +1,0 @@
-../../../../../../share/pyshared/numpy/lib/tests/test_io.py
