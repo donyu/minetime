@@ -23,4 +23,9 @@ We will be working with python for this assignment so make sure you have pip and
   * easy_install numpy
 
 2. Go into env/lib/python2.7/site-packages and git clone pymclevel into there
+  * git clone https://github.com/mcedit/pymclevel.git
 3. Try out test files within test directory and make sure they work
+4. Now go through following steps to install mcedit (to view MineCraft maps)
+  * git clone --recursive https://github.com/mcedit/mcedit
+  * pip install PyOpenGL
+  * pip install pygame
