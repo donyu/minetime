@@ -4,7 +4,7 @@ class Mtlex:
 
     reserved = {'if' : 'IF', 'then' : 'THEN', 'else' : 'ELSE', 'while' : 'WHILE', 'elif' : 'ELIF' }
 
-    tokens = ['NUMBER','PLUS','MINUS','TIMES','DIVIDE','LPAREN','RPAREN','ID','ASSIGN','LCURL','RCURL','STRING','COMMENT','COMMA','POINT'] + list(reserved.values())
+    tokens = ['NUMBER','PLUS','MINUS','TIMES','DIVIDE','LPAREN','RPAREN','ID','ASSIGN','LCURL','RCURL','STRING','COMMENT','COMMA','POINT', 'DOTOPERATOR'] + list(reserved.values())
     # Regular expression rules for simple tokens
     t_PLUS    = r'\+'
     t_MINUS   = r'-'
@@ -18,6 +18,7 @@ class Mtlex:
     t_STRING = r'".*"'
     t_COMMENT = r'/\*.*\*/'
     t_COMMA = r','
+    t_DOTOPERATOR = r'.'
     number =  r'\d+'
     t_POINT = t_LPAREN + number + t_COMMA + number + t_COMMA + number + t_RPAREN
 
