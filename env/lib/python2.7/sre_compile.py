@@ -1,1 +1,1 @@
-/usr/lib/python2.7/sre_compile.py
+/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/sre_compile.py

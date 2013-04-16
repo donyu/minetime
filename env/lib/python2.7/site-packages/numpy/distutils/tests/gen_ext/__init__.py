@@ -1,1 +1,0 @@
-../../../../../../../share/pyshared/numpy/distutils/tests/gen_ext/__init__.py
