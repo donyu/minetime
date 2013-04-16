@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/examples/scrap_clipboard.py

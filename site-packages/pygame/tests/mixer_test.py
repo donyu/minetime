@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/tests/mixer_test.py

@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/tests/sprite_test.py

@@ -1,0 +1,1 @@
+../../../../share/pyshared/pygame/_camera_vidcapture.py

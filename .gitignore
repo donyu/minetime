@@ -1,5 +1,2 @@
 *.*.swp
 *.pyc
-env
-lex_yacc
-lib

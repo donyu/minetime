@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/examples/chimp.py

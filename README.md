@@ -1,14 +1,6 @@
 ## Minetime - PLT Project Spring '13 ##
 
-Project Manager:            Mirza
-
-Language and Tools Guru:    Tanay
-
-System Architect:           Don
-
-System Integrator:          Patrice
-
-Tester/Validator:           Stephen
+Minetime, a language for creating structures in Minecraft.
 
 ### Environment Set Up Instructions ###
 
@@ -29,3 +21,15 @@ We will be working with python for this assignment so make sure you have pip and
   * git clone --recursive https://github.com/mcedit/mcedit
   * pip install PyOpenGL
   * pip install pygame
+
+Tools
+-----
+* http://www.dabeaz.com/ply/
+
+Members
+-------
+* Project Manager:            Mirza
+* Language and Tools Guru:    Tanay
+* System Architect:           Don
+* System Integrator:          Patrice
+* Tester/Validator:           Stephen

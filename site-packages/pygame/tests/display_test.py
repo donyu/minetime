@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/tests/display_test.py

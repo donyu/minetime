@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/tests/fastevent_test.py
