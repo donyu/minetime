@@ -2,7 +2,7 @@ import os
 from pymclevel import mclevel, box
 import logging
 
-MC_DIR = "~/.minecraft/saves"
+MC_DIR = os.getcwd() + "/saves"
 world = "testworld4"
 saves = os.path.expanduser(MC_DIR)
 worldpath = os.path.join(saves, world)
