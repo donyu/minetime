@@ -15,6 +15,7 @@ Tester/Validator:           Stephen
 We will be working with python for this assignment so make sure you have pip and easy_install already on your computer.
 
 1. Create a virtual environment and pip install all requirements
+  * pip install virtualenv
   * virtualenv env
   * source env/bin/activate
   * pip install pyyaml
