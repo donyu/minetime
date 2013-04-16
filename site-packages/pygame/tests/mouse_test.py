@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/tests/mouse_test.py

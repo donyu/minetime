@@ -1,0 +1,1 @@
+../../../../share/pyshared/pygame/compat.py
