@@ -20,7 +20,7 @@ We will be working with python for this assignment so make sure you have pip and
   * source env/bin/activate
   * pip install pyyaml
   * pip install ply
-  * easy_install numpy
+  * pip install numpy
 
 2. Go into env/lib/python2.7/site-packages and git clone pymclevel into there
   * git clone https://github.com/mcedit/pymclevel.git
