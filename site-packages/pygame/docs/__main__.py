@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/docs/__main__.py

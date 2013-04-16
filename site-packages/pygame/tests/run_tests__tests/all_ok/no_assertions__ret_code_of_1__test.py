@@ -1,0 +1,1 @@
+../../../../../../../share/pyshared/pygame/tests/run_tests__tests/all_ok/no_assertions__ret_code_of_1__test.py

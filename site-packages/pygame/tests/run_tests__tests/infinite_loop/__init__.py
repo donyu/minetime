@@ -1,0 +1,1 @@
+../../../../../../../share/pyshared/pygame/tests/run_tests__tests/infinite_loop/__init__.py

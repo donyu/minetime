@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/tests/blit_test.py

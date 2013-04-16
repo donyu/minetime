@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/tests/scrap_test.py

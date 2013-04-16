@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/tests/color_test.py

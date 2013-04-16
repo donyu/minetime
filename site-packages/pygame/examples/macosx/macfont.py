@@ -1,0 +1,1 @@
+../../../../../../share/pyshared/pygame/examples/macosx/macfont.py
