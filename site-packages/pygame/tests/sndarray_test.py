@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/tests/sndarray_test.py

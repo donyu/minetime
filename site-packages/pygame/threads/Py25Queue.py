@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/threads/Py25Queue.py

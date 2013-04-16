@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/tests/threads_tags.py

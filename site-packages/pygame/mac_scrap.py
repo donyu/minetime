@@ -1,0 +1,1 @@
+../../../../share/pyshared/pygame/mac_scrap.py

@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/gp2x/locals.py

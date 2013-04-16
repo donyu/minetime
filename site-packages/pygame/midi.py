@@ -1,0 +1,1 @@
+../../../../share/pyshared/pygame/midi.py

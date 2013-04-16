@@ -1,0 +1,1 @@
+../../../../../share/pyshared/pygame/examples/__init__.py
