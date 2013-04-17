@@ -1,8 +1,8 @@
 ## Minetime - PLT Project Spring '13 ##
 
 Minetime, a language for creating structures in Minecraft.
-
-### Environment Set Up Instructions ###
+---------------------------------------------------------
+Environment Set Up Instructions
 
 We will be working with python for this assignment so make sure you have pip and easy_install already on your computer.
 
@@ -25,6 +25,8 @@ We will be working with python for this assignment so make sure you have pip and
 Tools
 -----
 * http://www.dabeaz.com/ply/
+
+Please look inside lex_yacc folder for examples of ply programs to base off of.
 
 Members
 -------
