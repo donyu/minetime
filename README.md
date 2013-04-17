@@ -24,7 +24,8 @@ We will be working with python for this assignment so make sure you have pip and
 
 Tools
 -----
-* http://www.dabeaz.com/ply/
+* Lex/Yacc: http://www.dabeaz.com/ply/
+* Sytem Integrator: http://pythonhosted.org/distribute/setuptools.html
 
 Please look inside lex_yacc folder for examples of ply programs to base off of.
 
