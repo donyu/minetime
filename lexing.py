@@ -2,9 +2,9 @@ import ply.lex as lex
 
 class Mtlex:
 
-    reserved = {'if' : 'IF', 'then' : 'THEN', 'else' : 'ELSE', 'while' : 'WHILE', 'elif' : 'ELIF' }
+    reserved = {'if' : 'IF', 'then' : 'THEN', 'else' : 'ELSE', 'while' : 'WHILE', 'elif' : 'ELIF' , 'def' : 'DEF'}
 
-    tokens = ['NUMBER','PLUS','MINUS','TIMES','DIVIDE','LPAREN','RPAREN','ID','ASSIGN','LCURL','RCURL','STRING','COMMENT','COMMA','POINT', 'DOTOPERATOR'] + list(reserved.values())
+    tokens = ['NUMBER','PLUS','MINUS','TIMES','DIVIDE','LPAREN','RPAREN','ID','ASSIGN','LCURL','RCURL','STRING','COMMENT','COMMA','POINT', 'DOTOPERATOR', 'SEMICOLON', 'COLON'] + list(reserved.values())
     # Regular expression rules for simple tokens
     t_PLUS    = r'\+'
     t_MINUS   = r'-'
@@ -13,12 +13,15 @@ class Mtlex:
     t_LPAREN  = r'\('
     t_RPAREN  = r'\)'
     t_ASSIGN  = r'='
+    t_SEMICOLON = r';'
+    t_COLON = r':'
     t_LCURL = r'{'
     t_RCURL = r'}'
     t_STRING = r'".*"'
-    t_COMMENT = r'/\*.*\*/'
+   # t_COMMMENT = r'/\*.*\*/'
+    t_COMMENT = r'\#(.*)\n'
     t_COMMA = r','
-    t_DOTOPERATOR = r'.'
+    t_DOTOPERATOR = r'\.'
     number =  r'\d+'
     t_POINT = t_LPAREN + number + t_COMMA + number + t_COMMA + number + t_RPAREN
 
@@ -26,8 +29,8 @@ class Mtlex:
     def t_NUMBER(self,t):
         r'\d+'
         t.value = int(t.value)    
-        return t
-
+        return t        
+    
     def t_ID(self,t):
         r'[a-zA-Z_][a-zA-Z_0-9]*'
         t.type = self.reserved.get(t.value,'ID')    # Check for reserved words
@@ -59,8 +62,8 @@ class Mtlex:
 m = Mtlex()
 data = '''
 map = Flatmap("testmap.dat",500,500) /* hi */
-map.add(block(COBBLE), (0,0,0))
-map.close()
+map.add(block(COBBLE), (0,0,0)); #hi
+map.close();
 '''
 m.build()           # Build the lexer
 m.test(data)     # Test it
