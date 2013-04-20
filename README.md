@@ -28,6 +28,7 @@ Testing
 Testing relies on Python's unittest module.
 
 To run a test from commandline
+
     python -m unittest discover -s  ./tests -p '<pattern>'
 
     optional -v verbose flag
