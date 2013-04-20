@@ -2,9 +2,29 @@ import ply.lex as lex
 
 class Mtlex:
 
-    reserved = {'if' : 'IF', 'then' : 'THEN', 'else' : 'ELSE', 'while' : 'WHILE', 'elif' : 'ELIF' }
+    reserved = {'if' : 'IF', 
+                'then' : 'THEN', 
+                'else' : 'ELSE', 
+                'while' : 'WHILE', 
+                'elif' : 'ELIF'}
 
-    tokens = ['NUMBER','PLUS','MINUS','TIMES','DIVIDE','LPAREN','RPAREN','ID','ASSIGN','LCURL','RCURL','STRING','COMMENT','COMMA','POINT', 'DOTOPERATOR'] + list(reserved.values())
+    tokens = ['NUMBER',
+              'PLUS',
+              'MINUS',
+              'TIMES',
+              'DIVIDE',
+              'LPAREN',
+              'RPAREN',
+              'ID',
+              'ASSIGN',
+              'LCURL',
+              'RCURL',
+              'STRING',
+              'COMMENT',
+              'COMMA',
+              'POINT',
+              'DOTOPERATOR'] + list(reserved.values())
+
     # Regular expression rules for simple tokens
     t_PLUS    = r'\+'
     t_MINUS   = r'-'
@@ -13,14 +33,14 @@ class Mtlex:
     t_LPAREN  = r'\('
     t_RPAREN  = r'\)'
     t_ASSIGN  = r'='
-    t_LCURL = r'{'
-    t_RCURL = r'}'
-    t_STRING = r'".*"'
+    t_LCURL   = r'{'
+    t_RCURL   = r'}'
+    t_STRING  = r'".*"'
     t_COMMENT = r'/\*.*\*/'
-    t_COMMA = r','
+    t_COMMA   = r','
     t_DOTOPERATOR = r'.'
-    number =  r'\d+'
-    t_POINT = t_LPAREN + number + t_COMMA + number + t_COMMA + number + t_RPAREN
+    number    =  r'\d+'
+    t_POINT   = t_LPAREN + number + t_COMMA + number + t_COMMA + number + t_RPAREN
 
     # A regular expression rule with some action code
     def t_NUMBER(self,t):
@@ -52,15 +72,23 @@ class Mtlex:
     def test(self,data):
         self.lexer.input(data)
         while True:
-             tok = self.lexer.token()
-             if not tok: break
-             print tok
+            tok = self.lexer.token()
+            if not tok: break
+            print tok
 
-m = Mtlex()
-data = '''
-map = Flatmap("testmap.dat",500,500) /* hi */
-map.add(block(COBBLE), (0,0,0))
-map.close()
-'''
-m.build()           # Build the lexer
-m.test(data)     # Test it
+# m = Mtlex()
+# data = '''
+# map = Flatmap("testmap.dat",500,500) /* hi */
+# map.add(block(COBBLE), (0,0,0))
+# map.close()
+# '''
+# m.build()           # Build the lexer
+# m.test(data)     # Test it
+
+if __name__ == "__main__":
+    m = Mtlex()
+    m.build()
+    print "Enter a string to be tokenized"
+    while 1:
+        line = raw_input()
+        m.test(line)
