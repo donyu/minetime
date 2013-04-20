@@ -69,12 +69,14 @@ class Mtlex:
     def build(self,**kwargs):
         self.lexer = lex.lex(module=self, **kwargs)
 
-    def test(self,data):
+    def tok_str(self, data):
         self.lexer.input(data)
+        tok_str = ""
         while True:
             tok = self.lexer.token()
             if not tok: break
-            print tok
+            tok_str += str(tok)
+        return tok_str
 
 # m = Mtlex()
 # data = '''
@@ -91,4 +93,4 @@ if __name__ == "__main__":
     print "Enter a string to be tokenized"
     while 1:
         line = raw_input()
-        m.test(line)
+        print m.tok_str(line)
