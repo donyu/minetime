@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/tests/gfxdraw_test.py

@@ -1,1 +1,0 @@
-../../../../../share/pyshared/numpy/polynomial/hermite_e.py

@@ -1,1 +1,0 @@
-../../../../../../share/pyshared/numpy/core/tests/test_einsum.py

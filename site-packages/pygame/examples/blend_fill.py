@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/examples/blend_fill.py

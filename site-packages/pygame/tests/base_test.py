@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/tests/base_test.py

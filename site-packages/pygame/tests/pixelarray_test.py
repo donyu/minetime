@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/tests/pixelarray_test.py

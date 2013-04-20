@@ -1,1 +1,0 @@
-../../../../../share/pyshared/numpy/numarray/random_array.py

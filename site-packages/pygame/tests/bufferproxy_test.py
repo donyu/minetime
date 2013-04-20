@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/tests/bufferproxy_test.py

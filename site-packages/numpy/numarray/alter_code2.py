@@ -1,1 +1,0 @@
-../../../../../share/pyshared/numpy/numarray/alter_code2.py

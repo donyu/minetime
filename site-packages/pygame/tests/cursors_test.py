@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/tests/cursors_test.py

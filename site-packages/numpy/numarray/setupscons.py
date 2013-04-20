@@ -1,1 +1,0 @@
-../../../../../share/pyshared/numpy/numarray/setupscons.py

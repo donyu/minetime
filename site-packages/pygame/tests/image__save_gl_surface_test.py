@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/tests/image__save_gl_surface_test.py

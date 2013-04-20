@@ -1,1 +1,0 @@
-../../../../../../share/pyshared/pygame/tests/test_utils/async_sub.py

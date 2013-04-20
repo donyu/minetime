@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/gp2x/__init__.py

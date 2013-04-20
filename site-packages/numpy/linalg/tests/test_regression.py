@@ -1,1 +1,0 @@
-../../../../../../share/pyshared/numpy/linalg/tests/test_regression.py

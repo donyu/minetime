@@ -1,1 +1,0 @@
-../../../../../share/pyshared/numpy/distutils/from_template.py
