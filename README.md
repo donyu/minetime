@@ -4,7 +4,8 @@ Minetime, a language for creating structures in Minecraft.
 ---------------------------------------------------------
 Environment Set Up Instructions
 
-We will be working with python for this assignment so make sure you have pip and easy_install already on your computer.
+We will be working with python for this assignment so make sure you have pip and
+easy_install already on your computer.
 
 1. Create a virtual environment and pip install all requirements
   * pip install virtualenv
@@ -21,6 +22,22 @@ We will be working with python for this assignment so make sure you have pip and
   * git clone --recursive https://github.com/mcedit/mcedit
   * pip install PyOpenGL
   * pip install pygame
+
+Testing
+-------
+Testing relies on Python's unittest module.
+
+To run a test from commandline
+    python -m unittest discover -s  ./tests -p '<pattern>'
+
+    optional -v verbose flag
+    <pattern>: name of test, or *_test.py for all
+
+Or just run the all tests bootstrap
+    python runtests.py
+
+Note: You cannot run individual tests files with python because they don't have
+the parent directory in the environment variables without discover
 
 Tools
 -----
