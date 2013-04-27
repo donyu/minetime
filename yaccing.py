@@ -10,8 +10,7 @@ precedence = (
 
 def p_expression(p):
 	'''
-	expression : assignment-expression
-			   | initializer
+	expression : assignment-expression SEMICOLON
 	'''
 	print 'expression'
 
@@ -20,8 +19,6 @@ def p_assignment_expression(p):
     assignment-expression : ID ASSIGN initializer
     '''
     print 'assignment-operator'
-    print p[3]
-    # p[0] = p[1] + p[3]
 
 def p_initializer(p):
 	'''
