@@ -77,7 +77,7 @@ def p_parameter_list(p):
                    | parameter-list COMMA parameter-declaration
     '''
     if len(p) == 2:
-        p[0] = Node('parameter-list',[], p[1])
+        p[0] = Node('parameter-list', [p[1]])
     else:
         p[0] = Node('parameter-list',[p[3]], p[1])
     print p[0]
@@ -88,7 +88,7 @@ def p_parameter_declaration(p):
     parameter-declaration : primary-expression
                           | initializer
     '''
-    p[0] = Node('parameter-declaration',[], p[1])
+    p[0] = Node('parameter-declaration', [p[1]])
     print p[0]
 
 
