@@ -11,6 +11,8 @@ precedence = (
 def p_expression(p):
 	'''
 	expression : assignment-expression SEMICOLON
+			   | class-method-expression SEMICOLON
+			   | function-expression SEMICOLON
 	'''
 	print 'expression'
 
@@ -23,29 +25,64 @@ def p_assignment_expression(p):
 def p_initializer(p):
 	'''
 	initializer : ID LPAREN parameter-list RPAREN
+				| POINT
 	'''
 	print 'initializer'
+
+def p_class_method_expression(p):
+	'''
+	class-method-expression : ID DOTOPERATOR function-expression
+	'''
+	print 'class-method'
+
+def p_function_expression(p):
+	'''
+	function-expression : ID LPAREN parameter-list RPAREN
+						| ID LPAREN RPAREN
+	'''
+	print 'function-call'
 
 def p_parameter_list(p):
 	'''
 	parameter-list : parameter-declaration
 				   | parameter-list COMMA parameter-declaration
 	'''
-	print 'p-list' + ' ' + str(p[1])
+	print 'p-list'
 
 def p_parameter_declaration(p):
 	'''
-	parameter-declaration : STRING 
-						  | NUMBER
+	parameter-declaration : primary-expression
+						  | initializer
 	'''
-	print 'parameter' + ' ' + str(p[1])
+	print 'parameter'
 	p[0] = p[1]
 
-data = '''
+def p_primary_expression(p):
+	'''
+	primary-expression : ID
+					   | STRING
+					   | NUMBER
+	'''
+
+def p_error(p):
+	# we should throw compiler error in this case
+    print 'there is no grammar for this'
+
+data_1 = '''
 map = Flatmap("testmap.dat",500,500);
+'''
+data_2 = '''
+map.add(block(COBBLE), (0,0,0));
+'''
+data_3 = '''
+map.close();
 '''
 parser = yacc.yacc()
 m = Mtlex()
 m.build()
-l = m.get_lexer()
-result = parser.parse(data, lexer=l)
+print "line 1"
+result = parser.parse(data_1, lexer=m.lexer)
+print "\nline 2"
+result = parser.parse(data_2, lexer=m.lexer)
+print "\nline 3"
+result = parser.parse(data_3, lexer=m.lexer)
