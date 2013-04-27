@@ -8,54 +8,86 @@ precedence = (
     ('left', 'TIMES', 'DIVIDE')
 )
 
+class Node:
+    def __init__(self,type,children=None,leaf=None):
+         self.type = type
+         if children:
+              self.children = children
+         else:
+              self.children = [ ]
+         self.leaf = leaf
+
+    def __str__(self):
+        print self.type
+        for children in self.children:
+            print children
+        return ''
+
 def p_expression(p):
     '''
     expression : assignment-expression SEMICOLON
                | class-method-expression SEMICOLON
                | function-expression SEMICOLON
     '''
-    print 'expression'
+    p[0] = Node('expression', [p[1]])
+    print p[0]
 
 def p_assignment_expression(p):
     '''
     assignment-expression : ID ASSIGN initializer
     '''
-    print 'assignment-operator'
+    p[0] = Node('assignment-expression', [p[1],p[3]])
+    print p[0]
 
 def p_initializer(p):
     '''
     initializer : ID LPAREN parameter-list RPAREN
                 | POINT
     '''
-    print 'initializer'
+    if len(p) == 2:
+        p[0] = Node('initializer', [p[1]])
+    else:
+        p[0] = Node('initializer', [p[1], p[3]])
+    print p[0]
 
 def p_class_method_expression(p):
     '''
     class-method-expression : ID DOTOPERATOR function-expression
     '''
-    print 'class-method'
+    p[0] = Node('class-method-expression',[p[1],p[3]])
+    print p[0]
 
 def p_function_expression(p):
     '''
     function-expression : ID LPAREN parameter-list RPAREN
                         | ID LPAREN RPAREN
     '''
-    print 'function-call'
+    if len(p) == 5:
+        p[0] = Node('function-expression',[p[1],p[3]])
+    else:
+        p[0] = Node('function-expression',[p[1]])
+    print p[0]
 
 def p_parameter_list(p):
     '''
     parameter-list : parameter-declaration
                    | parameter-list COMMA parameter-declaration
     '''
-    print 'p-list'
+    if len(p) == 2:
+        p[0] = Node('parameter-list',[p[1]])
+    else:
+        p[0] = Node('parameter-list',[p[1],p[3]])
+    print p[0]
+
 
 def p_parameter_declaration(p):
     '''
     parameter-declaration : primary-expression
                           | initializer
     '''
-    print 'parameter'
-    p[0] = p[1]
+    p[0] = Node('parameter-declaration',[p[1]])
+    print p[0]
+
 
 def p_primary_expression(p):
     '''
@@ -63,6 +95,8 @@ def p_primary_expression(p):
                        | STRING
                        | NUMBER
     '''
+    p[0] = Node('primary-expression',[p[1]])
+    print p[0]
 
 def p_error(p):
     # we should throw compiler error in this case
