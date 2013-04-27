@@ -9,12 +9,12 @@ precedence = (
 )
 
 def p_expression(p):
-	'''
-	expression : assignment-expression SEMICOLON
-			   | class-method-expression SEMICOLON
-			   | function-expression SEMICOLON
-	'''
-	print 'expression'
+    '''
+    expression : assignment-expression SEMICOLON
+               | class-method-expression SEMICOLON
+               | function-expression SEMICOLON
+    '''
+    print 'expression'
 
 def p_assignment_expression(p):
     '''
@@ -23,49 +23,49 @@ def p_assignment_expression(p):
     print 'assignment-operator'
 
 def p_initializer(p):
-	'''
-	initializer : ID LPAREN parameter-list RPAREN
-				| POINT
-	'''
-	print 'initializer'
+    '''
+    initializer : ID LPAREN parameter-list RPAREN
+                | POINT
+    '''
+    print 'initializer'
 
 def p_class_method_expression(p):
-	'''
-	class-method-expression : ID DOTOPERATOR function-expression
-	'''
-	print 'class-method'
+    '''
+    class-method-expression : ID DOTOPERATOR function-expression
+    '''
+    print 'class-method'
 
 def p_function_expression(p):
-	'''
-	function-expression : ID LPAREN parameter-list RPAREN
-						| ID LPAREN RPAREN
-	'''
-	print 'function-call'
+    '''
+    function-expression : ID LPAREN parameter-list RPAREN
+                        | ID LPAREN RPAREN
+    '''
+    print 'function-call'
 
 def p_parameter_list(p):
-	'''
-	parameter-list : parameter-declaration
-				   | parameter-list COMMA parameter-declaration
-	'''
-	print 'p-list'
+    '''
+    parameter-list : parameter-declaration
+                   | parameter-list COMMA parameter-declaration
+    '''
+    print 'p-list'
 
 def p_parameter_declaration(p):
-	'''
-	parameter-declaration : primary-expression
-						  | initializer
-	'''
-	print 'parameter'
-	p[0] = p[1]
+    '''
+    parameter-declaration : primary-expression
+                          | initializer
+    '''
+    print 'parameter'
+    p[0] = p[1]
 
 def p_primary_expression(p):
-	'''
-	primary-expression : ID
-					   | STRING
-					   | NUMBER
-	'''
+    '''
+    primary-expression : ID
+                       | STRING
+                       | NUMBER
+    '''
 
 def p_error(p):
-	# we should throw compiler error in this case
+    # we should throw compiler error in this case
     print 'there is no grammar for this'
 
 data_1 = '''
