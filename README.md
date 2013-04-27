@@ -23,6 +23,10 @@ easy_install already on your computer.
   * pip install PyOpenGL
   * pip install pygame
 
+NOTE: The author of the library forgot to comment out print statements in a
+recent commit (d02d446). Be sure to comment out lines 803-806 to avoid a ton of
+prints each time you import pymclevel
+
 Testing
 -------
 Testing relies on Python's unittest module.
