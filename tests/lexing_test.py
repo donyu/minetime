@@ -17,10 +17,9 @@ class TestLexingSyntax(unittest.TestCase):
         lexeme = "LexToken(IF,'if',1,0)"
         self.assertEqual(lexeme, self.lex.tok_str("if"))
 
-    def test_dummy(self):
-        self.assertEqual(1, 1)
-
-    def test_3(self):
+    def test_true(self):
+        """Temporary sanity test"""
+        f = open('tests/textfile.txt', 'r')
         self.assertTrue(True)
 
 if __name__ == "__main__":
