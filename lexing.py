@@ -6,7 +6,9 @@ class Mtlex:
                 'then' : 'THEN', 
                 'else' : 'ELSE', 
                 'while' : 'WHILE', 
-                'elif' : 'ELIF'}
+                'elif' : 'ELIF',
+                'def' : 'DEF'
+                }
 
     tokens = ['NUMBER',
               'PLUS',
@@ -24,7 +26,8 @@ class Mtlex:
               'COMMA',
               'POINT',
               'DOTOPERATOR',
-              'SEMICOLON'] + list(reserved.values())
+              'SEMICOLON',
+              'COLON'] + list(reserved.values())
 
     # Regular expression rules for simple tokens
     t_PLUS    = r'\+'
@@ -34,22 +37,24 @@ class Mtlex:
     t_LPAREN  = r'\('
     t_RPAREN  = r'\)'
     t_ASSIGN  = r'='
-    t_LCURL   = r'{'
-    t_RCURL   = r'}'
-    t_STRING  = r'".*"'
-    t_COMMENT = r'/\*.*\*/'
-    t_COMMA   = r','
+    t_SEMICOLON = r';'
+    t_COLON = r':'
+    t_LCURL = r'{'
+    t_RCURL = r'}'
+    t_STRING = r'".*"'
+   # t_COMMMENT = r'/\*.*\*/'
+    t_COMMENT = r'\#(.*)(\n)?'
+    t_COMMA = r','
     t_DOTOPERATOR = r'\.'
-    t_SEMICOLON = r'\;'
-    number    =  r'\d+'
-    t_POINT   = t_LPAREN + number + t_COMMA + number + t_COMMA + number + t_RPAREN
+    number =  r'\d+'
+    t_POINT = t_LPAREN + number + t_COMMA + number + t_COMMA + number + t_RPAREN
 
     # A regular expression rule with some action code
     def t_NUMBER(self,t):
         r'\d+'
         t.value = int(t.value)    
-        return t
-
+        return t        
+    
     def t_ID(self,t):
         r'[a-zA-Z_][a-zA-Z_0-9]*'
         t.type = self.reserved.get(t.value,'ID')    # Check for reserved words
