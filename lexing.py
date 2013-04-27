@@ -2,9 +2,33 @@ import ply.lex as lex
 
 class Mtlex:
 
-    reserved = {'if' : 'IF', 'then' : 'THEN', 'else' : 'ELSE', 'while' : 'WHILE', 'elif' : 'ELIF' , 'def' : 'DEF'}
+    reserved = {'if' : 'IF', 
+                'then' : 'THEN', 
+                'else' : 'ELSE', 
+                'while' : 'WHILE', 
+                'elif' : 'ELIF',
+                'def' : 'DEF'
+                }
 
-    tokens = ['NUMBER','PLUS','MINUS','TIMES','DIVIDE','LPAREN','RPAREN','ID','ASSIGN','LCURL','RCURL','STRING','COMMENT','COMMA','POINT', 'DOTOPERATOR', 'SEMICOLON', 'COLON'] + list(reserved.values())
+    tokens = ['NUMBER',
+              'PLUS',
+              'MINUS',
+              'TIMES',
+              'DIVIDE',
+              'LPAREN',
+              'RPAREN',
+              'ID',
+              'ASSIGN',
+              'LCURL',
+              'RCURL',
+              'STRING',
+              'COMMENT',
+              'COMMA',
+              'POINT',
+              'DOTOPERATOR',
+              'SEMICOLON',
+              'COLON'] + list(reserved.values())
+
     # Regular expression rules for simple tokens
     t_PLUS    = r'\+'
     t_MINUS   = r'-'
@@ -19,7 +43,7 @@ class Mtlex:
     t_RCURL = r'}'
     t_STRING = r'".*"'
    # t_COMMMENT = r'/\*.*\*/'
-    t_COMMENT = r'\#(.*)\n'
+    t_COMMENT = r'\#(.*)(\n)?'
     t_COMMA = r','
     t_DOTOPERATOR = r'\.'
     number =  r'\d+'
@@ -52,18 +76,34 @@ class Mtlex:
     def build(self,**kwargs):
         self.lexer = lex.lex(module=self, **kwargs)
 
-    def test(self,data):
-        self.lexer.input(data)
-        while True:
-             tok = self.lexer.token()
-             if not tok: break
-             print tok
+    def get_lexer(self):
+        return self.lexer
 
-m = Mtlex()
-data = '''
-map = Flatmap("testmap.dat",500,500) /* hi */
-map.add(block(COBBLE), (0,0,0)); #hi
-map.close();
-'''
-m.build()           # Build the lexer
-m.test(data)     # Test it
+    def tok_str(self, data):
+        self.lexer.input(data)
+        tok_str = ""
+        while True:
+            tok = self.lexer.token()
+            if not tok: 
+              break
+            tok_str += str(tok) + "\n"
+        return tok_str
+
+# m = Mtlex()
+# data = '''
+# map = Flatmap("testmap.dat",500,500) /* hi */
+# map.add(block(COBBLE), (0,0,0))
+# map.close()
+# '''
+# m.build()           # Build the lexer
+# m.test(data)     # Test it
+
+if __name__ == "__main__":
+    m = Mtlex()
+    m.build()
+    l = m.get_lexer()
+    print "Enter a string to be tokenized"
+    while 1:
+        line = raw_input()
+        print m.tok_str(line)
+        print "Enter a string to be tokenized"

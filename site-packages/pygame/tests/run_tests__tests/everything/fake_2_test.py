@@ -1,1 +1,0 @@
-../../../../../../../share/pyshared/pygame/tests/run_tests__tests/everything/fake_2_test.py

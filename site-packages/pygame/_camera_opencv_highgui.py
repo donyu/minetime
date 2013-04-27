@@ -1,1 +1,0 @@
-../../../../share/pyshared/pygame/_camera_opencv_highgui.py

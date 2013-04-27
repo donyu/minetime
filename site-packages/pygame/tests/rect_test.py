@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/tests/rect_test.py

@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/tests/movie_tags.py

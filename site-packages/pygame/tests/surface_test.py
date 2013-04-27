@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/tests/surface_test.py

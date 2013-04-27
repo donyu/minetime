@@ -1,1 +1,0 @@
-../../../../../../../../share/pyshared/numpy/distutils/tests/pyrex_ext/tests/test_primes.py

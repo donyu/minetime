@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/tests/surfarray_test.py

@@ -1,1 +1,0 @@
-../../../../../share/pyshared/numpy/compat/py3k.py

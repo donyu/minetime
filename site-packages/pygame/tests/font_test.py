@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/tests/font_test.py

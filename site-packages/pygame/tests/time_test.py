@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/tests/time_test.py

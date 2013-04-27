@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/tests/threads_test.py

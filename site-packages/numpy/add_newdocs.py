@@ -1,1 +1,0 @@
-../../../../share/pyshared/numpy/add_newdocs.py

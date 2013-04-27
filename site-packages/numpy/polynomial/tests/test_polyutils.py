@@ -1,1 +1,0 @@
-../../../../../../share/pyshared/numpy/polynomial/tests/test_polyutils.py

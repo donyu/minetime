@@ -1,1 +1,0 @@
-../../../../../share/pyshared/pygame/threads/__init__.py

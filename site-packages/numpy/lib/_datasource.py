@@ -1,1 +1,0 @@
-../../../../../share/pyshared/numpy/lib/_datasource.py
