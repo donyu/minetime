@@ -23,7 +23,8 @@ class Mtlex:
               'COMMENT',
               'COMMA',
               'POINT',
-              'DOTOPERATOR'] + list(reserved.values())
+              'DOTOPERATOR',
+              'SEMICOLON'] + list(reserved.values())
 
     # Regular expression rules for simple tokens
     t_PLUS    = r'\+'
@@ -38,7 +39,8 @@ class Mtlex:
     t_STRING  = r'".*"'
     t_COMMENT = r'/\*.*\*/'
     t_COMMA   = r','
-    t_DOTOPERATOR = r'.'
+    t_DOTOPERATOR = r'\.'
+    t_SEMICOLON = r'\;'
     number    =  r'\d+'
     t_POINT   = t_LPAREN + number + t_COMMA + number + t_COMMA + number + t_RPAREN
 
