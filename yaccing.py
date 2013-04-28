@@ -1,5 +1,7 @@
 import ply.yacc as yacc
+import sys
 from lexing import Mtlex
+from traverse import *
 
 tokens = Mtlex.tokens
 
@@ -48,8 +50,7 @@ def p_assignment_expression(p):
     '''
     assignment-expression : ID ASSIGN initializer
     '''
-    p[0] = Node('assignment-expression', [p[3]], p[1])
-
+    p[0] = Node('assignment_expression', [p[3]], p[1])
 
 def p_initializer(p):
     '''
@@ -66,8 +67,7 @@ def p_class_method_expression(p):
     '''
     class-method-expression : ID DOTOPERATOR function-expression
     '''
-    p[0] = Node('class-method-expression',[p[3]], p[1])
-
+    p[0] = Node('class_method_expression',[p[3]], p[1])
 
 def p_function_expression(p):
     '''
@@ -75,10 +75,9 @@ def p_function_expression(p):
                         | ID LPAREN RPAREN
     '''
     if len(p) == 5:
-        p[0] = Node('function-expression',[p[3]], p[1])
+        p[0] = Node('function_expression',[p[3]], p[1])
     else:
-        p[0] = Node('function-expression', [], p[1])
-
+        p[0] = Node('function_expression', [], p[1])
 
 def p_parameter_list(p):
     '''
@@ -86,9 +85,9 @@ def p_parameter_list(p):
                    | parameter-list COMMA parameter-declaration
     '''
     if len(p) == 2:
-        p[0] = Node('parameter-list', [p[1]])
+        p[0] = Node('parameter_list', [p[1]])
     else:
-        p[0] = Node('parameter-list',[p[3]], p[1])
+        p[0] = Node('parameter_list',[p[1], p[3]])
 
 
 def p_parameter_declaration(p):
@@ -96,7 +95,7 @@ def p_parameter_declaration(p):
     parameter-declaration : primary-expression
                           | initializer
     '''
-    p[0] = Node('parameter-declaration', [p[1]])
+    p[0] = Node('parameter_declaration', [p[1]])
 
 
 def p_primary_expression(p):
@@ -105,8 +104,7 @@ def p_primary_expression(p):
                        | STRING
                        | NUMBER
     '''
-    p[0] = Node('primary-expression', [], p[1])
-
+    p[0] = Node('primary_expression', [], p[1])
 
 def p_error(p):
     # we should throw compiler error in this case
@@ -134,3 +132,5 @@ print result
 print "\nline 3"
 result = parser.parse(data_3, lexer=m.lexer)
 print result
+
+t = Traverse(result1)
