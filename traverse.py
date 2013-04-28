@@ -37,7 +37,7 @@ class Traverse:
         meth(tree)
 
     def _primary_expression(self,tree):
-        self.fill(tree.leaf)
+        self.fill(str(tree.leaf))
 
     def _class_method_expression(self,tree):
         self.fill(tree.leaf)
@@ -53,4 +53,28 @@ class Traverse:
     def _expression(self,tree):
         self.dispatch(tree.children)
 
-    def _assignment_expression
+    def _assignment_expression(self, tree):
+        self.fill()
+        self.write(tree.leaf)
+        self.write("=")
+        self.dispatch(tree.children)
+
+    def _initializer(self, tree):
+        self.write(tree.leaf)
+        if tree.children:
+            self.write("(")
+            self.dispatch(tree.children)
+            self.write(")")
+
+    def _parameter_list(self, tree):
+        if len(tree.children) == 1:
+            self.dispatch(tree.children)
+        else:
+            self.dispatch(tree.children[0])
+            self.write(",")
+            self.dispatch(tree.children[1])
+
+    def _parameter_declaration(self, tree):
+        self.dispatch(tree.children)
+
+
