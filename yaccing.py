@@ -124,13 +124,13 @@ parser = yacc.yacc()
 m = Mtlex()
 m.build()
 print "line 1"
-result = parser.parse(data_1, lexer=m.lexer)
+result1 = parser.parse(data_1, lexer=m.lexer)
 print result
 print "\nline 2"
-result = parser.parse(data_2, lexer=m.lexer)
+result2 = parser.parse(data_2, lexer=m.lexer)
 print result
 print "\nline 3"
-result = parser.parse(data_3, lexer=m.lexer)
+result3 = parser.parse(data_3, lexer=m.lexer)
 print result
 
 t = Traverse(result1)
