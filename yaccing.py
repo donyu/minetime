@@ -125,12 +125,13 @@ m = Mtlex()
 m.build()
 print "line 1"
 result1 = parser.parse(data_1, lexer=m.lexer)
-print result
+print result1
 print "\nline 2"
 result2 = parser.parse(data_2, lexer=m.lexer)
-print result
+print result2
 print "\nline 3"
 result3 = parser.parse(data_3, lexer=m.lexer)
-print result
-
+print result3
+print "\n"
 t = Traverse(result1)
+print "\n"

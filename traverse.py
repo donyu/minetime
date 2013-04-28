@@ -54,7 +54,6 @@ class Traverse:
         self.dispatch(tree.children)
 
     def _assignment_expression(self, tree):
-        self.write()
         self.write(tree.leaf)
         self.write("=")
         self.dispatch(tree.children)
