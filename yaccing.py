@@ -133,5 +133,5 @@ print "\nline 3"
 result3 = parser.parse(data_3, lexer=m.lexer)
 print result3
 print "\n"
-t = Traverse(result1)
+t = Traverse(result2)
 print "\n"

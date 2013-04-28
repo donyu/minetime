@@ -4,6 +4,8 @@ class Traverse:
 
     def __init__(self, tree, file = sys.stdout):
         self.f = file
+        self.flist = {"Flatmap": "Flatmap","block": "materials.blockWithID", "add": "add"}
+        self.blocks = {"COBBLE": 4, "AIR": 0, "STONE": 1, "GRASS":2, "DIRT": 3}
         self.future_imports = []
         self._indent = 0
         self.dispatch(tree)
@@ -27,7 +29,7 @@ class Traverse:
         "Decrease the indentation level."
         self._indent -= 1
 
-    def dispatch(self, tree):
+    def dispatch(self, tree, boolean=0):
         "Dispatcher function, dispatching tree type T to method _T."
         if isinstance(tree, list):
             for t in tree:
@@ -37,7 +39,10 @@ class Traverse:
         meth(tree)
 
     def _primary_expression(self,tree):
-        self.write(str(tree.leaf))
+        if tree.leaf in self.blocks:
+            self.write(str(self.blocks[tree.leaf]))
+        else:
+            self.write(str(tree.leaf))
 
     def _class_method_expression(self,tree):
         self.write(tree.leaf)
@@ -59,7 +64,10 @@ class Traverse:
         self.dispatch(tree.children)
 
     def _initializer(self, tree):
-        self.write(tree.leaf)
+        if tree.leaf in self.flist:
+            self.write(self.flist[tree.leaf])
+        else:  
+            self.write(tree.leaf)
         if tree.children:
             self.write("(")
             self.dispatch(tree.children)
