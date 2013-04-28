@@ -9,6 +9,7 @@ precedence = (
 )
 
 class Node:
+
     def __init__(self,type,children=None,leaf=None,code=None):
          self.type = type
          if children:
@@ -19,12 +20,20 @@ class Node:
          self.code = code
 
     def __str__(self):
-        print self.type
+        return self.traverse(0)
+
+    def traverse(self, i):
+        s = self.type
+        indent = "\n" + i*2*' '
         if self.leaf:
-            print self.leaf
+            if isinstance(self.leaf, Node):
+                s += indent + self.leaf.traverse(i+1)
+            else:
+                s += indent + str(self.leaf)
         for children in self.children:
-            print children
-        return ''
+            s += indent + children.traverse(i+1)
+        return s
+    
 
 def p_expression(p):
     '''
@@ -33,14 +42,14 @@ def p_expression(p):
                | function-expression SEMICOLON
     '''
     p[0] = Node('expression', [p[1]])
-    print p[0]
+
 
 def p_assignment_expression(p):
     '''
     assignment-expression : ID ASSIGN initializer
     '''
     p[0] = Node('assignment-expression', [p[3]], p[1])
-    print p[0]
+
 
 def p_initializer(p):
     '''
@@ -51,14 +60,14 @@ def p_initializer(p):
         p[0] = Node('initializer', [], p[1])
     else:
         p[0] = Node('initializer', [p[3]], p[1])
-    print p[0]
+
 
 def p_class_method_expression(p):
     '''
     class-method-expression : ID DOTOPERATOR function-expression
     '''
     p[0] = Node('class-method-expression',[p[3]], p[1])
-    print p[0]
+
 
 def p_function_expression(p):
     '''
@@ -69,7 +78,7 @@ def p_function_expression(p):
         p[0] = Node('function-expression',[p[3]], p[1])
     else:
         p[0] = Node('function-expression', [], p[1])
-    print p[0]
+
 
 def p_parameter_list(p):
     '''
@@ -80,7 +89,6 @@ def p_parameter_list(p):
         p[0] = Node('parameter-list', [p[1]])
     else:
         p[0] = Node('parameter-list',[p[3]], p[1])
-    print p[0]
 
 
 def p_parameter_declaration(p):
@@ -89,7 +97,6 @@ def p_parameter_declaration(p):
                           | initializer
     '''
     p[0] = Node('parameter-declaration', [p[1]])
-    print p[0]
 
 
 def p_primary_expression(p):
@@ -99,7 +106,7 @@ def p_primary_expression(p):
                        | NUMBER
     '''
     p[0] = Node('primary-expression', [], p[1])
-    print p[0]
+
 
 def p_error(p):
     # we should throw compiler error in this case
@@ -120,7 +127,10 @@ m = Mtlex()
 m.build()
 print "line 1"
 result = parser.parse(data_1, lexer=m.lexer)
+print result
 print "\nline 2"
 result = parser.parse(data_2, lexer=m.lexer)
+print result
 print "\nline 3"
 result = parser.parse(data_3, lexer=m.lexer)
+print result
