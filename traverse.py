@@ -11,13 +11,16 @@ class Traverse(object):
         self.blocks = {"COBBLE": 4, "AIR": 0, "STONE": 1, "GRASS":2, "DIRT": 3}
         self.future_imports = []
         self._indent = 0
-        self.dispatch(tree)
+        self.x = self.dispatch(tree)
         self.f.write("")
         self.f.flush()
 
     def fill(self, text = ""):
         "Indent a piece of text, according to the current indentation level"
         self.f.write("\n"+"    "*self._indent + text)
+
+    def getpython(self):
+        return self.x
 
     def flatten(self, x):
         result = []
@@ -77,7 +80,7 @@ class Traverse(object):
         return a
 
     def _expression(self,tree,flag=None):
-        print self.dispatch(tree.children[0])
+        return self.dispatch(tree.children[0])
 
     def _assignment_expression(self, tree,flag=None):
         [x,y] = self.dispatch(tree.children[0])
@@ -85,8 +88,8 @@ class Traverse(object):
             return self.flatmap_method(tree.leaf, y)
 
     def flatmap_method(self, name, param):
-        if len(param) > 4:
-            raise Exception("Wrong num of params")
+        if len(param) != 4:
+            raise Exception("Wrong number of params passed to Flatmap")
         else:
             s = '''
 MC_DIR = "~/.minecraft/saves"
@@ -95,8 +98,8 @@ worldpath = os.path.join(saves,'''
             worldname = param[0]
             s += worldname + ")"
             sizex = param[1]
-            sizey = 100
-            sizez = param[2]
+            sizey = param[2]
+            sizez = param[3]
             x = str(int(int(sizex) * 1/2 * -1))
             y = str(0)
             z = str(int(int(sizez) * 1/2 * -1))

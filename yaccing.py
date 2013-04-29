@@ -112,7 +112,7 @@ def p_error(p):
 
 
 data_1 = '''
-map = Flatmap("testmap.dat",500,500);
+map = Flatmap("testmap.dat",500,500,500);
 '''
 data_2 = '''
 map.add(block(COBBLE), (0,0,0));
@@ -133,7 +133,15 @@ print "\nline 3"
 result3 = parser.parse(data_3, lexer=m.lexer)
 print result3
 print "\n"
-t = Traverse(result1)
-t = Traverse(result2)
-t = Traverse(result3)
-print "\n"
+firstline = '''
+import logging
+import os
+import sys
+from pymclevel import mclevel, box'''
+t = Traverse(result1).getpython()
+t1 = Traverse(result2).getpython()
+t2 = Traverse(result3).getpython()
+code = firstline + "\n" + t + "\n" + t1 + "\n" + t2
+f = open("hello.py",'w')
+f.write(code)
+print code
