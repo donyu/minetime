@@ -14,6 +14,7 @@ class Traverse(object):
                        "GRASS":2, 
                        "DIRT": 3}
         self.future_imports = []
+        # Type table for variables 
         self.symbols = {}
         self._indent = 0
         self.x = self.dispatch(tree)
@@ -92,6 +93,7 @@ class Traverse(object):
     def _assignment_expression(self, tree,flag=None):
         [x,y] = self.dispatch(tree.children[0])
         if x == "Flatmap":
+            self.symbols[tree.leaf] = x
             return self.flatmap_method(tree.leaf, y)
 
     def flatmap_method(self, name, param):
