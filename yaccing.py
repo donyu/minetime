@@ -137,7 +137,8 @@ firstline = '''
 import logging
 import os
 import sys
-from pymclevel import mclevel, box'''
+from pymclevel import mclevel
+from pymclevel.box import BoundingBox'''
 t = Traverse(result1).getpython()
 t1 = Traverse(result2).getpython()
 t2 = Traverse(result3).getpython()

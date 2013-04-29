@@ -5,9 +5,9 @@ class Traverse(object):
     def __init__(self, tree, file = sys.stdout):
         self.f = file
         self.flist = {"Flatmap": "Flatmap",
-                      "block": "level.materials.blockWithID", 
-                      "add": "level.fillBlocks",
-                      "close": "level.saveInPlace"}
+                      "block": "materials.blockWithID", 
+                      "add": "fillBlocks",
+                      "close": "saveInPlace"}
         self.blocks = {"COBBLE": 4, "AIR": 0, "STONE": 1, "GRASS":2, "DIRT": 3}
         self.future_imports = []
         self._indent = 0
@@ -74,7 +74,7 @@ class Traverse(object):
     def add_method(self,tree,flag=None):
         a = flag + "." + self.flist[tree.leaf] + "("
         x = self.dispatch(tree.children[0])
-        p1 = "box.BoundingBox(origin=" + x[2] + ",size=(1,1,1)),"
+        p1 = "BoundingBox(origin=" + x[2] + ",size=(1,1,1)),"
         p2 = flag + "." + x[0] + "(" + x[1] + ")"
         a+= p1 + p2 + ")"
         return a
@@ -91,12 +91,6 @@ class Traverse(object):
         if len(param) != 4:
             raise Exception("Wrong number of params passed to Flatmap")
         else:
-            s = '''
-MC_DIR = "~/.minecraft/saves"
-saves = os.path.expanduser(MC_DIR)
-worldpath = os.path.join(saves,''' 
-            worldname = param[0]
-            s += worldname + ")"
             sizex = param[1]
             sizey = param[2]
             sizez = param[3]
@@ -107,12 +101,10 @@ worldpath = os.path.join(saves,'''
                 sizey = 255
             point = "(" + x + "," + y + "," + z + ")"
             size = "(" + str(sizex) + "," + str(sizey) + "," + str(sizez) + ")"
-            fline = "mclevel.MCInfdevOldLevel(worldpath, create=True)"
-            line = "chunk_box = box.BoundingBox(" + point + "," + size + ")"
-            comp = name + "=" + fline + "\n" + line + "\n"
-            createchunk = name + ".createChunksInBox(chunk_box)"
-            s = s + "\n" + comp + createchunk
-        return s
+            fline = "mclevel.MCInfdevOldLevel(" + param[0] + ", create=True)"
+            line = name + ".createChunksInBox(BoundingBox(" + point + "," + size + "))"
+            comp = name + "=" + fline + "\n" + line
+            return comp
 
 
     def _initializer(self, tree, flag=None):
