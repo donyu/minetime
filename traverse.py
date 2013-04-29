@@ -74,6 +74,8 @@ class Traverse(object):
     def add_method(self,tree,flag=None):
         a = flag + "." + self.flist[tree.leaf] + "("
         x = self.dispatch(tree.children[0]) # x[0] has block with number, x[1] has point
+        if len(x) != 2:
+            raise Exception("Wrong number of parameters given to add method")
         p1 = "BoundingBox(origin=" + x[1] + ",size=(1,1,1)),"
         p2 = flag + "." + x[0]
         a+= p1 + p2 + ")"
