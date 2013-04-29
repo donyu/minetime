@@ -8,8 +8,13 @@ class Traverse(object):
                       "block": "materials.blockWithID", 
                       "add": "fillBlocks",
                       "close": "saveInPlace"}
-        self.blocks = {"COBBLE": 4, "AIR": 0, "STONE": 1, "GRASS":2, "DIRT": 3}
+        self.blocks = {"COBBLE": 4, 
+                       "AIR": 0, 
+                       "STONE": 1, 
+                       "GRASS":2, 
+                       "DIRT": 3}
         self.future_imports = []
+        self.symbols = {}
         self._indent = 0
         self.x = self.dispatch(tree)
         self.f.write("")

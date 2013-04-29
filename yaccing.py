@@ -112,7 +112,7 @@ def p_error(p):
 
 
 data_1 = '''
-map = Flatmap("testmap.dat",500,500,500);
+map = Flatmap("testfiles/testmap",500,500,500);
 '''
 data_2 = '''
 map.add(block(COBBLE), (0,0,0));
