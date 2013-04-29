@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 import sys
 from lexing import Mtlex
-from traverse import *
+from NewTraverse import *
 
 tokens = Mtlex.tokens
 
@@ -220,28 +220,28 @@ print "\nline 3"
 result3 = parser.parse(data_3, lexer=m.lexer)
 print result3
 print "\n"
-print "\nline 4"
-result4 = parser.parse(data_4, lexer=m.lexer)
-print result4
-print "\n"
-print "\nline 5"
-result5 = parser.parse(data_5, lexer=m.lexer)
-print result5
-print "\n"
-print "\nline 6"
-result6 = parser.parse(data_6, lexer=m.lexer)
-print result6
-print "\n"
-#firstline = '''
-#import logging
-#import os
-#import sys
-#from pymclevel import mclevel
-#from pymclevel.box import BoundingBox'''
-#t = Traverse(result1).getpython()
-#t1 = Traverse(result2).getpython()
-#t2 = Traverse(result3).getpython()
-#code = firstline + "\n" + t + "\n" + t1 + "\n" + t2
-#f = open("hello.py",'w')
-#f.write(code)
-#print code
+# print "\nline 4"
+# result4 = parser.parse(data_4, lexer=m.lexer)
+# print result4
+# print "\n"
+# print "\nline 5"
+# result5 = parser.parse(data_5, lexer=m.lexer)
+# print result5
+# print "\n"
+# print "\nline 6"
+# result6 = parser.parse(data_6, lexer=m.lexer)
+# print result6
+# print "\n"
+firstline = '''
+import logging
+import os
+import sys
+from pymclevel import mclevel
+from pymclevel.box import BoundingBox'''
+t = Traverse(result1).getpython()
+t1 = Traverse(result2).getpython()
+t2 = Traverse(result3).getpython()
+code = firstline + "\n" + t + "\n" + t1 + "\n" + t2
+f = open("hello.py",'w')
+f.write(code)
+print code
