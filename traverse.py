@@ -117,21 +117,25 @@ class Traverse(object):
 
 
     def _initializer(self, tree, flag=None):
-        if tree.leaf == "block":
-            x = self.flist[tree.leaf]
-            try:
-                y = self.dispatch(tree.children[0],"block")
-                return x + "(" + y + ")"
-            except:
-                raise Exception("Invalid Number of arguments/Argument for Block")
-        if tree.leaf in self.flist:
-            x = self.flist[tree.leaf]
-        else:  
-            x = tree.leaf
-        if tree.children:
-            y = self.dispatch(tree.children[0],flag)
-            return (x,y)
-        return x
+        if tree.leaf:
+            if tree.leaf == "block":
+                x = self.flist[tree.leaf]
+                try:
+                    y = self.dispatch(tree.children[0],"block")
+                    return x + "(" + y + ")"
+                except:
+                    raise Exception("Invalid Number of arguments/Argument for Block")
+            if tree.leaf in self.flist:
+                x = self.flist[tree.leaf]
+            else:  
+                x = tree.leaf
+            if tree.children:
+                y = self.dispatch(tree.children[0],flag)
+                return (x,y)
+            else:
+                return x
+        else:
+            return self.dispatch(tree.children[0],flag)
 
     def _parameter_list(self, tree, flag=None):
         if len(tree.children) == 1:
