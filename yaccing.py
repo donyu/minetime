@@ -55,10 +55,10 @@ def p_assignment_expression(p):
 def p_initializer(p):
     '''
     initializer : ID LPAREN parameter-list RPAREN
-                | POINT
+                | primary-expression
     '''
     if len(p) == 2:
-        p[0] = Node('initializer', [], p[1])
+        p[0] = Node('initializer', [p[1]])
     else:
         p[0] = Node('initializer', [p[3]], p[1])
 
@@ -92,8 +92,7 @@ def p_parameter_list(p):
 
 def p_parameter_declaration(p):
     '''
-    parameter-declaration : primary-expression
-                          | initializer
+    parameter-declaration : initializer
     '''
     p[0] = Node('parameter_declaration', [p[1]])
 
@@ -103,6 +102,7 @@ def p_primary_expression(p):
     primary-expression : ID
                        | STRING
                        | NUMBER
+                       | POINT 
     '''
     p[0] = Node('primary_expression', [], p[1])
 
