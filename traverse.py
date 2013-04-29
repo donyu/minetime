@@ -73,9 +73,9 @@ class Traverse(object):
 
     def add_method(self,tree,flag=None):
         a = flag + "." + self.flist[tree.leaf] + "("
-        x = self.dispatch(tree.children[0])
-        p1 = "BoundingBox(origin=" + x[2] + ",size=(1,1,1)),"
-        p2 = flag + "." + x[0] + "(" + x[1] + ")"
+        x = self.dispatch(tree.children[0]) # x[0] has block, x[1] has block number, x[2] has point
+        p1 = "BoundingBox(origin=" + x[1] + ",size=(1,1,1)),"
+        p2 = flag + "." + x[0]
         a+= p1 + p2 + ")"
         return a
 
@@ -108,6 +108,13 @@ class Traverse(object):
 
 
     def _initializer(self, tree, flag=None):
+        if tree.leaf == "block":
+            x = self.flist[tree.leaf]
+            try:
+                y = self.dispatch(tree.children[0])
+                return x + "(" + y + ")"
+            except:
+                raise Exception("BLOCK should have one argument")
         if tree.leaf in self.flist:
             x = self.flist[tree.leaf]
         else:  
