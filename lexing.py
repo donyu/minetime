@@ -47,14 +47,7 @@ class Mtlex:
     t_COMMA = r','
     t_DOTOPERATOR = r'\.'
     number =  r'\d+'
-    t_POINT = '{0}\s*{1}\s*{2}\s*{3}\s*{4}\s*{5}\s*{6}'.format(t_LPAREN,
-                                                               number,
-                                                               t_COMMA,
-                                                               number,
-                                                               t_COMMA,
-                                                               number,
-                                                               t_RPAREN)
-
+    t_POINT = t_LPAREN + number + t_COMMA + number + t_COMMA + number + t_RPAREN
 
     # A regular expression rule with some action code
     def t_NUMBER(self,t):
@@ -83,6 +76,9 @@ class Mtlex:
     def build(self,**kwargs):
         self.lexer = lex.lex(module=self, **kwargs)
 
+    def get_lexer(self):
+        return self.lexer
+
     def tok_str(self, data):
         self.lexer.input(data)
         tok_str = ""
@@ -105,7 +101,7 @@ class Mtlex:
 if __name__ == "__main__":
     m = Mtlex()
     m.build()
-    l = m.lexer
+    l = m.get_lexer()
     print "Enter a string to be tokenized"
     while 1:
         line = raw_input()
