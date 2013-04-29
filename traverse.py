@@ -1,10 +1,13 @@
 import sys
 
-class Traverse:
+class Traverse(object):
 
     def __init__(self, tree, file = sys.stdout):
         self.f = file
-        self.flist = {"Flatmap": "Flatmap","block": "level.materials.blockWithID", "add": "level.fillBlocks"}
+        self.flist = {"Flatmap": "Flatmap",
+                      "block": "level.materials.blockWithID", 
+                      "add": "level.fillBlocks",
+                      "close": "level.saveInPlace"}
         self.blocks = {"COBBLE": 4, "AIR": 0, "STONE": 1, "GRASS":2, "DIRT": 3}
         self.future_imports = []
         self._indent = 0
@@ -54,10 +57,9 @@ class Traverse:
             self.write(self.flist[tree.leaf])
         else:  
             self.write(tree.leaf)
-        if tree.children:
-            self.write("(")
-            self.dispatch(tree.children)
-            self.write(")")
+        self.write("(")
+        self.dispatch(tree.children)
+        self.write(")")
 
     def _expression(self,tree):
         self.dispatch(tree.children)

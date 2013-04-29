@@ -10,7 +10,7 @@ precedence = (
     ('left', 'TIMES', 'DIVIDE')
 )
 
-class Node:
+class Node(object):
 
     def __init__(self,type,children=None,leaf=None,code=None):
          self.type = type
