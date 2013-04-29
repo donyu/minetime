@@ -8,6 +8,7 @@ class Traverse(object):
                       "block": "materials.blockWithID", 
                       "add": "fillBlocks",
                       "close": "saveInPlace"}
+        self.flistsymbol = {"close" : "MAP"}
         self.blocks = {"COBBLE": 4, 
                        "AIR": 0, 
                        "STONE": 1, 
@@ -77,9 +78,15 @@ class Traverse(object):
         if tree.leaf == "add":
             return self.add_method(tree,flag)
         elif tree.leaf in self.flist:
+            if tree.leaf in self.flistsymbol:
+                if not self.symbols.get(flag) == self.flistsymbol[tree.leaf]:
+                    raise Exception(tree.leaf + " method called on a non " + self.flistsymbol[tree.leaf] + " type")
             return flag + "." + self.flist[tree.leaf] + "()"
 
     def add_method(self,tree,flag=None):
+        # add must be called on a map type
+        if not self.symbols.get(flag) == "MAP":
+            raise Exception("Add method called on a non map type")
         a = flag + "." + self.flist[tree.leaf] + "("
         x = self.dispatch(tree.children[0],flag) # x[0] has block with number, x[1] has point
         if len(x) != 2:
@@ -93,9 +100,9 @@ class Traverse(object):
         return self.dispatch(tree.children[0],flag)
 
     def _assignment_expression(self, tree,flag=None):
-        [x,y] = self.dispatch(tree.children[0],flag)
-        if x == "Flatmap":
-            self.symbols[tree.leaf] = x
+        [x,y] = self.dispatch(tree.children[0],flag) # x has name, y has params
+        if x == "Flatmap": 
+            self.symbols[tree.leaf] = "MAP" # add to symbol table
             return self.flatmap_method(tree.leaf, y)
 
     def flatmap_method(self, name, param):
@@ -159,7 +166,10 @@ class Traverse(object):
         return self.dispatch(tree.children[0],flag)
 
     def _declaration_list(self, tree, flag=None):
-        return self.dispatch(tree.children[0],flag)
+        if len(tree.children) == 1:
+            return self.dispatch(tree.children[0],flag)
+        else:
+            return self.dispatch(tree.children[0],flag) + "\n" + self.dispatch(tree.children[1],flag)
 
     def _declaration(self, tree, flag=None):
         return self.dispatch(tree.children[0],flag)
