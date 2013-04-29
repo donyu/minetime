@@ -7,7 +7,9 @@ class Mtlex:
                 'else' : 'ELSE', 
                 'while' : 'WHILE', 
                 'elif' : 'ELIF',
-                'def' : 'DEF'
+                'def' : 'DEF',
+                'for' : 'FOR',
+                'while' : 'WHILE'
                 }
 
     tokens = ['NUMBER',
@@ -46,12 +48,14 @@ class Mtlex:
     t_COMMENT = r'\#(.*)(\n)?'
     t_COMMA = r','
     t_DOTOPERATOR = r'\.'
-    number =  r'\d+'
-    t_POINT = t_LPAREN + number + t_COMMA + number + t_COMMA + number + t_RPAREN
+    NUMBER =  r'\d+'
+    t_POINT = t_LPAREN + NUMBER + t_COMMA + NUMBER + t_COMMA + NUMBER + t_RPAREN
 
     # A regular expression rule with some action code
     def t_NUMBER(self,t):
         r'\d+'
+        # BUG: FIX, DON. 0 DOES NOT WORKKKK
+        # TODO: UNARY MINUS OR FORCE NEGATIVE NUMBER?
         t.value = int(t.value)    
         return t        
     
@@ -60,7 +64,7 @@ class Mtlex:
         t.type = self.reserved.get(t.value,'ID')    # Check for reserved words
         return t
 
-    # Define a rule so we can track line numbers
+    # Define a rule so we can track line NUMBERs
     def t_newline(self,t):
         r'\n+'
         t.lexer.lineno += len(t.value)
