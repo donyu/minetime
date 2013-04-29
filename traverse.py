@@ -53,7 +53,7 @@ class Traverse(object):
         "Dispatcher function, dispatching tree type T to method _T."
         if isinstance(tree, list):
             for t in tree:
-                self.dispatch(t)
+                self.dispatch(t,flag)
             return
         meth = getattr(self, "_"+tree.type)
         x = meth(tree,flag)
@@ -62,6 +62,8 @@ class Traverse(object):
     def _primary_expression(self,tree,flag=None):
         if tree.leaf in self.blocks:
             return str(self.blocks[tree.leaf])
+        elif flag == "block":
+            raise Exception("Not a valid block type")
         else:
             return str(tree.leaf)
 
@@ -78,7 +80,7 @@ class Traverse(object):
 
     def add_method(self,tree,flag=None):
         a = flag + "." + self.flist[tree.leaf] + "("
-        x = self.dispatch(tree.children[0]) # x[0] has block with number, x[1] has point
+        x = self.dispatch(tree.children[0],flag) # x[0] has block with number, x[1] has point
         if len(x) != 2:
             raise Exception("Wrong number of parameters given to add method")
         p1 = "BoundingBox(origin=" + x[1] + ",size=(1,1,1)),"
@@ -87,10 +89,10 @@ class Traverse(object):
         return a
 
     def _expression(self,tree,flag=None):
-        return self.dispatch(tree.children[0])
+        return self.dispatch(tree.children[0],flag)
 
     def _assignment_expression(self, tree,flag=None):
-        [x,y] = self.dispatch(tree.children[0])
+        [x,y] = self.dispatch(tree.children[0],flag)
         if x == "Flatmap":
             return self.flatmap_method(tree.leaf, y)
 
@@ -118,25 +120,25 @@ class Traverse(object):
         if tree.leaf == "block":
             x = self.flist[tree.leaf]
             try:
-                y = self.dispatch(tree.children[0])
+                y = self.dispatch(tree.children[0],"block")
                 return x + "(" + y + ")"
             except:
-                raise Exception("BLOCK should have one argument")
+                raise Exception("Invalid Number of arguments/Argument for Block")
         if tree.leaf in self.flist:
             x = self.flist[tree.leaf]
         else:  
             x = tree.leaf
         if tree.children:
-            y = self.dispatch(tree.children[0])
+            y = self.dispatch(tree.children[0],flag)
             return (x,y)
         return x
 
     def _parameter_list(self, tree, flag=None):
         if len(tree.children) == 1:
-            return self.dispatch(tree.children[0])
+            return self.dispatch(tree.children[0],flag)
         else:
-            x = self.dispatch(tree.children[0])
-            y = self.dispatch(tree.children[1])
+            x = self.dispatch(tree.children[0],flag)
+            y = self.dispatch(tree.children[1],flag)
             z = [x] + [y]
             return self.flatten(z)
                     # if len(tree.children) == 1:
@@ -147,5 +149,5 @@ class Traverse(object):
         #     self.dispatch(tree.children[1])
 
     def _parameter_declaration(self, tree, flag=None):
-        return self.dispatch(tree.children[0])
+        return self.dispatch(tree.children[0],flag)
 
