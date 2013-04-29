@@ -73,7 +73,7 @@ class Traverse(object):
 
     def add_method(self,tree,flag=None):
         a = flag + "." + self.flist[tree.leaf] + "("
-        x = self.dispatch(tree.children[0]) # x[0] has block, x[1] has block number, x[2] has point
+        x = self.dispatch(tree.children[0]) # x[0] has block with number, x[1] has point
         p1 = "BoundingBox(origin=" + x[1] + ",size=(1,1,1)),"
         p2 = flag + "." + x[0]
         a+= p1 + p2 + ")"
