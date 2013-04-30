@@ -184,24 +184,24 @@ def p_error(p):
     print 'there is no grammar for this'
 
 
-data_1 = '''
-x = Flatmap("testfiles/testmap",500,500,500);
-x.add(block(COBBLE), (0,0,0));
-x.close();
-'''
+#data_1 = '''
+#x = Flatmap("testfiles/testmap",500,500,500);
+#x.add(block(COBBLE), (0,0,0));
+#x.close();
+#'''
 
 parser = yacc.yacc()
 m = Mtlex()
 m.build()
 
-firstline = '''
-import logging
-import os
-import sys
-from pymclevel import mclevel
-from pymclevel.box import BoundingBox'''
-t = Traverse(result1).getpython()
-code = firstline + "\n" + t + "\n"
-f = open("hello.py",'w')
-f.write(code)
-print code
+#firstline = '''
+#import logging
+#import os
+#import sys
+#from pymclevel import mclevel
+#from pymclevel.box import BoundingBox'''
+#t = Traverse(result1).getpython()
+#code = firstline + "\n" + t + "\n"
+#f = open("hello.py",'w')
+#f.write(code)
+#print code
