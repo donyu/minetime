@@ -1,8 +1,10 @@
 import unittest
-import lexing
+import sys
 from cStringIO import StringIO
 from itertools import izip
 
+sys.path.append('..')
+import lexing
 
 class TestLexingSyntax(unittest.TestCase):
 

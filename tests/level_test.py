@@ -1,8 +1,11 @@
+import sys
 import unittest
 import filecmp
-from pymclevel.box import BoundingBox
 from filecmp import dircmp
-from tests import templevel
+
+sys.path.append('..')
+from pymclevel.box import BoundingBox
+import templevel
 
 STANDARD = 'testfiles/Standard'
 
