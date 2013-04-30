@@ -31,18 +31,14 @@ Testing
 -------
 Testing relies on Python's unittest module.
 
-To run a test from commandline
+To run a test from commandline, GO INTO test/ (YOU MUST BE IN TEST TO RUN THE 
+UNITTESTS---DUE TO RELATIVE FILE PATHS) and run each *_test.py with python.
 
-    python -m unittest discover -s  ./tests -p '<pattern>'
+Or to run all the tests 
 
-    optional -v verbose flag
-    <pattern>: name of test, or *_test.py for all
-
-Or just run the all tests bootstrap
     python runtests.py
 
-Note: You cannot run individual tests files with python because they don't have
-the parent directory in the environment variables without discover
+NOTE: Imperative that you are in the tests/ directory to run any tests!!
 
 Tools
 -----
