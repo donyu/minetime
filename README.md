@@ -34,11 +34,25 @@ Testing relies on Python's unittest module.
 To run a test from commandline, GO INTO test/ (YOU MUST BE IN TEST TO RUN THE 
 UNITTESTS---DUE TO RELATIVE FILE PATHS) and run each *_test.py with python.
 
-Or to run all the tests 
+To run all the tests 
 
     python runtests.py
 
 NOTE: Imperative that you are in the tests/ directory to run any tests!!
+
+Python also has a CLI method of testing individual classes and methods within
+a class following the format
+
+    python -m unittest test_module.TestClass.test_method
+
+    TestClass and test_method being optional
+
+For example, to test the test_0_bug method of TestYaccing in yaccing_test.py,
+you would run
+
+    python -m unittest yaccing_test.TestYaccing.test_0_bug
+
+This way, we can save all our test cases as well as keep them modular.
 
 Tools
 -----
