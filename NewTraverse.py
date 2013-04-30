@@ -15,6 +15,7 @@ class Traverse(object):
                        "GRASS":2, 
                        "DIRT": 3}
         self.future_imports = []
+        self.tempPoints = set()
         # Type table for variables 
         self.symbols = {}
         self._indent = 0
@@ -66,8 +67,10 @@ class Traverse(object):
             return str(self.blocks[tree.leaf])
         elif flag == "block":
             raise Exception("Not a valid block type")
-        else:
+        elif tree.leaf:
             return str(tree.leaf)
+        else: # It is a point
+            return self.dispatch(tree.children[0],flag)
 
     def _class_method_expression(self,tree,flag=None):
         s = tree.leaf
@@ -91,6 +94,11 @@ class Traverse(object):
         x = self.dispatch(tree.children[0],flag) # x[0] has block with number, x[1] has point
         if len(x) != 2:
             raise Exception("Wrong number of parameters given to add method")
+        print "It is:",x[1]
+        if not self.symbols.get(x[1]) == "POINT" and not x[1] in self.tempPoints:
+            raise Exception("Not a valid point")
+        if x[1] in self.tempPoints:
+            self.tempPoints.remove(x[1])
         p1 = "BoundingBox(origin=" + x[1] + ",size=(1,1,1)),"
         p2 = flag + "." + x[0]
         a+= p1 + p2 + ")"
@@ -100,10 +108,15 @@ class Traverse(object):
         return self.dispatch(tree.children[0],flag)
 
     def _assignment_expression(self, tree,flag=None):
-        [x,y] = self.dispatch(tree.children[0],flag) # x has name, y has params
-        if x == "Flatmap": 
-            self.symbols[tree.leaf] = "MAP" # add to symbol table
-            return self.flatmap_method(tree.leaf, y)
+        x = self.dispatch(tree.children[0],flag) # x has name, y has params
+        if type(x) is tuple:
+            if x[0] == "Flatmap": 
+                self.symbols[tree.leaf] = "MAP" # add to symbol table
+                return self.flatmap_method(tree.leaf, x[1])
+        else: # assigning a point right now
+            self.symbols[tree.leaf] = "POINT"
+            self.tempPoints.remove(x)
+            return tree.leaf + "=" + x
 
     def flatmap_method(self, name, param):
         if len(param) != 4:
@@ -179,4 +192,8 @@ class Traverse(object):
 
     def _statement(self,tree,flag=None):
         return self.dispatch(tree.children[0],flag)
+
+    def _point_gen(self,tree,flag=None):
+        self.tempPoints.add(tree.leaf)
+        return tree.leaf
 
