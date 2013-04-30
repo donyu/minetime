@@ -185,53 +185,15 @@ def p_error(p):
 
 
 data_1 = '''
-map = Flatmap("testfiles/testmap",500,500,500);
-'''
-data_2 = '''
-map.add(block(COBBLE), (0,0,0));
-'''
-data_3 = '''
-map.close();
-'''
-data_4 = '''
-{ i=0;i=1;i=2; }
-'''
-
-data_5 = '''
-while (i=1) {i=1;i=1;i=1;}
-i = 0;
-'''
-
-data_6 = '''
-if (i=222220) {} 
-if (i=2) {a;} else {b;}
+x = Flatmap("testfiles/testmap",500,500,500);
+x.add(block(COBBLE), (0,0,0));
+x.close();
 '''
 
 parser = yacc.yacc()
 m = Mtlex()
 m.build()
-print "line 1"
-result1 = parser.parse(data_1, lexer=m.lexer)
-print result1
-print "\nline 2"
-result2 = parser.parse(data_2, lexer=m.lexer)
-print result2
-print "\nline 3"
-result3 = parser.parse(data_3, lexer=m.lexer)
-print result3
-print "\n"
-# print "\nline 4"
-# result4 = parser.parse(data_4, lexer=m.lexer)
-# print result4
-# print "\n"
-# print "\nline 5"
-# result5 = parser.parse(data_5, lexer=m.lexer)
-# print result5
-# print "\n"
-# print "\nline 6"
-# result6 = parser.parse(data_6, lexer=m.lexer)
-# print result6
-# print "\n"
+
 firstline = '''
 import logging
 import os
@@ -239,9 +201,7 @@ import sys
 from pymclevel import mclevel
 from pymclevel.box import BoundingBox'''
 t = Traverse(result1).getpython()
-t1 = Traverse(result2).getpython()
-t2 = Traverse(result3).getpython()
-code = firstline + "\n" + t + "\n" + t1 + "\n" + t2
+code = firstline + "\n" + t + "\n"
 f = open("hello.py",'w')
 f.write(code)
 print code
