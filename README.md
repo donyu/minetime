@@ -2,8 +2,18 @@
 
 Minetime, a language for creating structures in Minecraft.
 ---------------------------------------------------------
-Environment Set Up Instructions
 
+TODO
+----
+
+* Make grammar handle statement like if (x>3) or if (x==3)
+* Update grammar to allow class methods in if statments
+* Traversal for if statments
+* Traversal for if else
+* Make grammar handle elif
+
+Environment Set Up Instructions
+-------------------------------
 We will be working with python for this assignment so make sure you have pip and
 easy_install already on your computer.
 

@@ -158,9 +158,19 @@ def p_primary_expression(p):
     primary_expression : ID
                        | STRING
                        | NUMBER
-                       | POINT
+                       | point_gen
     '''
-    p[0] = Node('primary_expression', [], p[1])
+    if not isinstance(p[1], basestring) and not isinstance(p[1],int):
+        p[0] = Node('primary_expression', [p[1]])
+    else:
+        p[0] = Node('primary_expression', [], p[1])
+
+
+def p_point_gen(p):
+    '''
+    point_gen : POINT
+    '''
+    p[0] = Node('point_gen',[], p[1])
 
 def p_iteration_statement(p):
     '''
@@ -187,24 +197,38 @@ def p_error(p):
     print 'there is no grammar for this'
 
 
-#data_1 = '''
-#x = Flatmap("testfiles/testmap",500,500,500);
-#x.add(block(COBBLE), (0,0,0));
-#x.close();
-#'''
+data_1 = '''
+x = Flatmap("testfiles/testmap",500,500,500);
+b = (10,20,30);
+x.add(block(COBBLE), b);
+x.close();
+'''
+
+data_2 = '''
+a = (10,20,30);
+'''
+
+data_3 = '''
+a = 2
+if (a> 1 ) { a = 1;}
+'''
 
 parser = yacc.yacc()
 m = Mtlex()
 m.build()
 
-#firstline = '''
-#import logging
-#import os
-#import sys
-#from pymclevel import mclevel
-#from pymclevel.box import BoundingBox'''
-#t = Traverse(result1).getpython()
-#code = firstline + "\n" + t + "\n"
-#f = open("hello.py",'w')
-#f.write(code)
-#print code
+result1 = parser.parse(data_1, lexer=m.lexer)
+print result1
+
+firstline = '''
+import logging
+import os
+import sys
+from pymclevel import mclevel
+from pymclevel.box import BoundingBox'''
+t = Traverse(result1).getpython()
+print t 
+code = firstline + "\n" + t + "\n"
+f = open("hello.py",'w')
+f.write(code)
+print code
