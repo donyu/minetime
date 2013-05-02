@@ -165,9 +165,12 @@ def p_primary_expression(p):
 def p_iteration_statement(p):
     '''
     iteration_statement : WHILE LPAREN expression RPAREN statement
+                        | FOR LPAREN expression_statement expression_statement expression RPAREN statement
     '''
-
-    p[0] = Node('iteration_statement', [p[3], p[5]])
+    if p[1] == "while":
+        p[0] = Node('iteration_statement', [p[3], p[5]])
+    else:
+        p[0] = Node('iteration_statement', [p[3], p[4], p[5], p[7]])
 
 def p_selection_statement(p):
     '''
