@@ -205,6 +205,11 @@ data_2 = '''
 a = (10,20,30);
 '''
 
+data_3 = '''
+a = 2
+if (a> 1 ) { a = 1;}
+'''
+
 parser = yacc.yacc()
 m = Mtlex()
 m.build()

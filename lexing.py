@@ -29,7 +29,9 @@ class Mtlex:
               'POINT',
               'DOTOPERATOR',
               'SEMICOLON',
-              'COLON'] + list(reserved.values())
+              'COLON',
+              'GREATERTHAN',
+              'LESSTHAN'] + list(reserved.values())
 
     # Regular expression rules for simple tokens
     t_PLUS    = r'\+'
@@ -44,6 +46,8 @@ class Mtlex:
     t_LCURL = r'{'
     t_RCURL = r'}'
     t_STRING = r'".*"'
+    t_GREATERTHAN = r'>'
+    t_LESSTHAN = r'<'
    # t_COMMMENT = r'/\*.*\*/'
     t_COMMENT = r'\#(.*)(\n)?'
     t_COMMA = r','

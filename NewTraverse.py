@@ -25,7 +25,7 @@ class Traverse(object):
 
     def fill(self, text = ""):
         "Indent a piece of text, according to the current indentation level"
-        self.f.write("\n"+"    "*self._indent + text)
+        return "\n"+"    "*self._indent + text
 
     def getpython(self):
         return self.x
@@ -45,14 +45,15 @@ class Traverse(object):
 
     def enter(self):
         "Print ':', and increase the indentation."
-        self.write(":")
         self._indent += 1
+        return ":"
 
     def leave(self):
         "Decrease the indentation level."
         self._indent -= 1
 
-    def dispatch(self, tree, flag=None):
+    # calls the function corresponding to the name of the node of the tree. Call on a single node and not a list
+    def dispatch(self, tree, flag=None): 
         "Dispatcher function, dispatching tree type T to method _T."
         if isinstance(tree, list):
             for t in tree:
@@ -109,13 +110,15 @@ class Traverse(object):
 
     def _assignment_expression(self, tree,flag=None):
         x = self.dispatch(tree.children[0],flag) # x has name, y has params
+        print x
         if type(x) is tuple:
             if x[0] == "Flatmap": 
                 self.symbols[tree.leaf] = "MAP" # add to symbol table
                 return self.flatmap_method(tree.leaf, x[1])
         else: # assigning a point right now
-            self.symbols[tree.leaf] = "POINT"
-            self.tempPoints.remove(x)
+            if x in self.tempPoints:
+                self.symbols[tree.leaf] = "POINT"
+                self.tempPoints.remove(x)
             return tree.leaf + "=" + x
 
     def flatmap_method(self, name, param):
@@ -188,12 +191,43 @@ class Traverse(object):
         return self.dispatch(tree.children[0],flag)
 
     def _expression_statement(self,tree,flag=None):
+        print "HI",self.dispatch(tree.children[0],flag)
         return self.dispatch(tree.children[0],flag)
 
     def _statement(self,tree,flag=None):
         return self.dispatch(tree.children[0],flag)
 
+    def _statement_list(self,tree,flag=None):
+        if len(tree.children) == 1:
+            return self.dispatch(tree.children[0],flag)
+        else:
+            return self.dispatch(tree.children[0],flag) + self.dispatch(tree.children[1],flag)
+
+    def _expression_statement(self,tree,flag=None):
+        if len(tree.children) != 0:
+            return self.dispatch(tree.children[0],flag)
+        else:
+            return ""
+
+    def _compound_statement(self,tree,flag=None):
+        if len(tree.children) == 0:
+            return ""
+        else:
+            return self.dispatch(tree.children[0],flag)
+
     def _point_gen(self,tree,flag=None):
         self.tempPoints.add(tree.leaf)
         return tree.leaf
+
+    def _selection_statement(self,tree,flag=None):
+        if len(tree.children) == 2: # if statement
+            s = "if " + self.dispatch(tree.children[0],flag) + self.enter()
+            r = self.dispatch(tree.children[1],flag)
+            print r
+            s += self.fill(r)
+            self.leave()
+            return s
+        else:
+            return "WHAT"
+
 
