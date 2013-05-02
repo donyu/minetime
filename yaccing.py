@@ -184,8 +184,8 @@ def p_iteration_statement(p):
 
 def p_selection_statement(p):
     '''
-    selection_statement : IF LPAREN expression RPAREN compound_statement
-                        | IF LPAREN expression RPAREN compound_statement ELSE statement
+    selection_statement : IF LPAREN expression RPAREN statement
+                        | IF LPAREN expression RPAREN statement ELSE statement
     '''
     if len(p) == 6:
         p[0] = Node('selection_statement', [p[3], p[5]])
@@ -217,18 +217,18 @@ parser = yacc.yacc()
 m = Mtlex()
 m.build()
 
-result1 = parser.parse(data_1, lexer=m.lexer)
-print result1
-
-firstline = '''
-import logging
-import os
-import sys
-from pymclevel import mclevel
-from pymclevel.box import BoundingBox'''
-t = Traverse(result1).getpython()
-print t 
-code = firstline + "\n" + t + "\n"
-f = open("hello.py",'w')
-f.write(code)
-print code
+#result1 = parser.parse(data_1, lexer=m.lexer)
+#print result1
+#
+#firstline = '''
+#import logging
+#import os
+#import sys
+#from pymclevel import mclevel
+#from pymclevel.box import BoundingBox'''
+#t = Traverse(result1).getpython()
+#print t 
+#code = firstline + "\n" + t + "\n"
+#f = open("hello.py",'w')
+#f.write(code)
+#print code

@@ -7,12 +7,6 @@ sys.path.append('..')
 import yaccing
 from lexing import Mtlex
 
-tokens = Mtlex.tokens
-
-precedence = (
-    ('left', 'PLUS', 'MINUS'),
-    ('left', 'TIMES', 'DIVIDE')
-)
 
 class TestYaccing(unittest.TestCase):
 
@@ -40,10 +34,47 @@ class TestYaccing(unittest.TestCase):
                """
         self.print_result(prog)
 
-    def test_selection(self):
+    def test_for(self):
+        prog = """
+               for (i = 1; i = 1; i = 1) {
+                   i = 1;
+               }
+               """
+        self.print_result(prog)
+
+    def test_if(self):
         prog = """\
                if (i=222220) {} 
-               if (i=2) {a;} else {b;}
+               """
+        self.print_result(prog)
+
+    def test_if_else(self):
+        prog = """\
+               if (i = 1)
+                   i = 2;
+               else {
+                   i = 3;
+               }
+               """
+        self.print_result(prog)
+
+    def test_if_elseif_else(self):
+        prog = """\
+               if (i = 1)
+                   i = 2;
+               else if (i=2) {
+                   i = 3;
+               } else
+                   i = 4;
+               """
+        self.print_result(prog)
+
+    def test_0_bug(self):
+        """
+        BUG: Does not display 0 when assigned
+        """
+        prog = """\
+               i = 0;
                """
         self.print_result(prog)
 
