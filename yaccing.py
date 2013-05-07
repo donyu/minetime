@@ -284,13 +284,17 @@ def main(){
 x = Flatmap("testfiles/testmap",500,500,500);
 a = 10;
 b = Point(a,a,a);
-if (i = 1)
+if (i*5<=30 && x!=5)
 {
    i = 2;
    a = 3;
 }
 else {
    i = 3;
+}
+while (i*5<=30 && x!=5) 
+{
+    i=3333;
 }
 x.add(block(COBBLE), b);
 x.close();
