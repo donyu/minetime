@@ -283,7 +283,7 @@ data_1 = '''
 def main(){
 x = Flatmap("testfiles/testmap",500,500,500);
 a = 5;
-b = Point(a,10,20);
+b = Point(a,a,a);
 x.add(block(COBBLE), b);
 x.close();
 }

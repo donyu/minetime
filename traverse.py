@@ -138,6 +138,8 @@ class Traverse(object):
     def flatmap_method(self, name, param):
         if len(param) != 4:
             raise Exception("Wrong number of params passed to Flatmap")
+        elif not (self.checkint(param[1]) and self.checkint(param[2]) and self.checkint(param[3])):
+            raise Exception("Parameters passed were not integers for map size")
         else:
             sizex = param[1]
             sizey = param[2]
@@ -158,7 +160,7 @@ class Traverse(object):
         if len(param) != 3:
             raise Exception("Wrong number of params passed to Flatmap")
         elif not (self.checkint(param[0]) and self.checkint(param[1]) and self.checkint(param[2])):
-            raise Exception("Parameters passe were not integers")
+            raise Exception("Parameters passed were not integers")
         else:
             self.symbols[name] = "POINT"
             return name + "=(" + param[0] + "," + param[1] + "," + param[2] + ")"
