@@ -39,8 +39,12 @@ class Node(object):
 def p_function_definition(p):
     '''
     function_definition : DEF ID LPAREN parameter_list RPAREN LCURL declaration_list RCURL
+                        | DEF ID LPAREN parameter_list RPAREN LCURL RCURL
     '''
-    p[0] = Node('function_definition', [p[4], p[7]])
+    if len(p) == 9:
+        p[0] = Node('function_definition', [p[4], p[7]])
+    else:
+        p[0] = Node('function_definition', [p[4]])
 
 def p_declaration_list(p):
     '''
@@ -103,7 +107,6 @@ def p_expression_statement(p):
 def p_expression(p):
     '''
     expression : assignment_expression 
-               | primary_expression
     '''
     p[0] = Node('expression', [p[1]])
 
@@ -111,8 +114,78 @@ def p_expression(p):
 def p_assignment_expression(p):
     '''
     assignment_expression : ID ASSIGN initializer
+                          | logical_or_expression
     '''
-    p[0] = Node('assignment_expression', [p[3]], p[1])
+    if len(p) == 4:
+        p[0] = Node('assignment_expression', [p[3]], p[1])
+    else:
+        p[0] = Node('assignment_expression', [p[1]])
+
+def p_logical_or_expression(p):
+    '''
+    logical_or_expression : logical_and_expression
+                          | logical_or_expression OR logical_and_expression
+    '''
+    if len(p) == 2:
+        p[0] = Node('logical_or_expression', [p[1]])
+    else:
+        p[0] = Node('logical_or_expression', [p[1], p[3]], p[2])
+
+def p_logical_and_expression(p):
+    '''
+    logical_and_expression : equality_expression
+                           | logical_and_expression AND equality_expression
+    '''
+    if len(p) == 2:
+        p[0] = Node('logical_and_expression', [p[1]])
+    else:
+        p[0] = Node('logical_and_expression', [p[1], p[3]], p[2])
+
+def p_equality_expression(p):
+    '''
+    equality_expression : relational_expression
+                        | equality_expression EQ relational_expression
+                        | equality_expression NEQ relational_expression
+    '''
+    if len(p) == 2:
+        p[0] = Node('equality_expression', [p[1]])
+    else:
+        p[0] = Node('equality_expression', [p[1], p[3]], p[2])
+
+def p_relational_expression(p):
+    '''
+    relational_expression : additive_expression
+                          | relational_expression G_OP additive_expression
+                          | relational_expression L_OP additive_expression
+                          | relational_expression GE_OP additive_expression
+                          | relational_expression LE_OP additive_expression
+    '''
+    if len(p) == 2:
+        p[0] = Node('relational_expression', [p[1]])
+    else:
+        p[0] = Node('relational_expression', [p[1], p[3]], p[2])
+
+def p_additive_expression(p):
+    '''
+    additive_expression : multiplicative_expression
+                        | additive_expression PLUS multiplicative_expression
+                        | additive_expression MINUS multiplicative_expression
+    '''
+    if len(p) == 2:
+        p[0] = Node('additive_expression', [p[1]])
+    else:
+        p[0] = Node('additive_expression', [p[1], p[3]], p[2])
+
+def p_multiplicative_expression(p):
+    '''
+    multiplicative_expression : primary_expression
+                              | multiplicative_expression TIMES primary_expression
+                              | multiplicative_expression DIVIDE primary_expression
+    '''
+    if len(p) == 2:
+        p[0] = Node('multiplicative_expression', [p[1]])
+    else:
+        p[0] = Node('multiplicative_expression', [p[1], p[3]], p[2])
 
 def p_initializer(p):
     '''
@@ -123,7 +196,6 @@ def p_initializer(p):
         p[0] = Node('initializer', [p[1]])
     else:
         p[0] = Node('initializer', [p[3]], p[1])
-
 
 def p_class_method_expression(p):
     '''
@@ -166,9 +238,12 @@ def p_primary_expression(p):
                        | STRING
                        | NUMBER
                        | point_gen
+                       | LPAREN expression RPAREN
     '''
     if not isinstance(p[1], basestring) and not isinstance(p[1],int):
         p[0] = Node('primary_expression', [p[1]])
+    elif len(p) == 4:
+        p[0] = Node('primary_expression', [p[2]])
     else:
         p[0] = Node('primary_expression', [], p[1])
 

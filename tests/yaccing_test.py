@@ -16,9 +16,10 @@ class TestYaccing(unittest.TestCase):
     def test_helloworld(self):
         prog = """\
 def main() {
-    map = Flatmap("testfiles/testmap",500,500,500);
-    map.add(block(COBBLE), (0,0,0));
-    map.close();
+    x = Flatmap("testfiles/testmap",500,500,500);
+    b = (10,20,30);
+    x.add(block(COBBLE), b);
+    x.close();
 }
                """
         self.print_result(prog)
@@ -81,7 +82,6 @@ def main() {
        i = 4;
 }
                """
-        print prog
         self.print_result(prog)
 
     def test_0_bug(self):
@@ -91,6 +91,40 @@ def main() {
         prog = """\
 def main() {
     i = 0;
+}
+               """
+        self.print_result(prog)
+
+    def test_relations_and_arithmetic(self):
+        prog = """\
+def main() {
+    a && b;
+    a || b;
+    a == b;
+    a != b;
+    a > b;
+    a < b;
+    a >= b;
+    a <= b;
+    a + b;
+    2 - 3;
+    3 * 3;
+    3 / 3;
+}
+               """
+        self.print_result(prog)
+
+    def test_empty_function(self):
+        prog = """\
+def main(1,2) {
+}
+               """
+        self.print_result(prog)
+
+    def test_complicated(self):
+        prog = """\
+def main() {
+    a * (b - 3) + 3 || 5;
 }
                """
         self.print_result(prog)
