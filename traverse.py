@@ -275,7 +275,7 @@ class Traverse(object):
         if len(tree.children) == 1:
             return self.dispatch(tree.children[0],flag)
         else:
-            return self.dispatch(tree.children[0],flag) + self.dispatch(tree.children[1],flag)
+            return self.dispatch(tree.children[0],flag) + "\n" + self.dispatch(tree.children[1],flag)
 
     def _expression_statement(self,tree,flag=None):
         if len(tree.children) != 0:
@@ -295,14 +295,26 @@ class Traverse(object):
 
     def _selection_statement(self,tree,flag=None):
         if len(tree.children) == 2: # if statement
-            s = "if " + self.dispatch(tree.children[0],flag) + self.enter()
+            s = "if " + self.dispatch(tree.children[0],flag) + ":\n"
             r = self.dispatch(tree.children[1],flag)
-            print r
+            # adding the indent yo
+            self.enter()
             s += self.fill(r)
             self.leave()
             return s
         else:
-            return "WHAT"
+            s = "if " + self.dispatch(tree.children[0],flag) + ":\n"
+            r = self.dispatch(tree.children[1],flag)
+            self.enter()
+            s += self.fill(r + "\n")
+            self.leave()
+            s+= "else:\n"
+            t = self.dispatch(tree.children[2],flag)
+            self.enter()
+            s += self.fill(t)
+            self.leave()
+            return s
+
 
     def _function_definition(self, tree, flag=None):
         fname = tree.leaf
@@ -311,9 +323,10 @@ class Traverse(object):
             p = self.dispatch(tree.children[0],flag)
             s = s + p
             s = s + "):\n"
-            self.enter()
             r = self.dispatch(tree.children[1],flag)
+            self.enter()
             s += self.fill(r)
+            self.leave()
             return s
         else:
             p = self.dispatch(tree.children[0],flag)

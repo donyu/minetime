@@ -284,6 +284,14 @@ def main(){
 x = Flatmap("testfiles/testmap",500,500,500);
 a = 5;
 b = Point(a,a,a);
+if (i = 1)
+{
+   i = 2;
+   a = 3;
+}
+else {
+   i = 3;
+}
 x.add(block(COBBLE), b);
 x.close();
 }
