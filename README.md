@@ -15,9 +15,15 @@ Done
 
 Still to do
 * Make grammar handle elsif
+* Make grammar handle multiple functions
+* make grammar handle return statements
 * Type checking (Don)
 * Functions and scope checking
 * Figuring out what to do for "for" loops
+
+Functions 
+* symbol table with list of functions and the arguments they take in and their names
+* type checking - some of it happens at runtime, but we can check if the number of arguements etc is fine 
 
 Environment Set Up Instructions
 -------------------------------
