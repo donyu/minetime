@@ -9,7 +9,7 @@ class Mtlex:
                 'elif' : 'ELIF',
                 'def' : 'DEF',
                 'for' : 'FOR',
-                'while' : 'WHILE'
+                'while' : 'WHILE',
                 }
 
     tokens = ['NUMBER',
@@ -30,8 +30,14 @@ class Mtlex:
               'DOTOPERATOR',
               'SEMICOLON',
               'COLON',
-              'GREATERTHAN',
-              'LESSTHAN'] + list(reserved.values())
+              'G_OP',
+              'L_OP',
+              'GE_OP',
+              'LE_OP',
+              'AND',
+              'OR',
+              'EQ',
+              'NEQ'] + list(reserved.values())
 
     # Regular expression rules for simple tokens
     t_PLUS    = r'\+'
@@ -46,8 +52,14 @@ class Mtlex:
     t_LCURL = r'{'
     t_RCURL = r'}'
     t_STRING = r'".*"'
-    t_GREATERTHAN = r'>'
-    t_LESSTHAN = r'<'
+    t_G_OP = r'>'
+    t_L_OP = r'<'
+    t_GE_OP = r'>='
+    t_LE_OP = r'<='
+    t_AND = r'&&'
+    t_OR = r'\|\|'
+    t_EQ = r'=='
+    t_NEQ = r'!='
    # t_COMMMENT = r'/\*.*\*/'
     t_COMMENT = r'\#(.*)(\n)?'
     t_COMMA = r','
