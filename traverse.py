@@ -138,25 +138,40 @@ class Traverse(object):
                 return tree.leaf + "=" + x
 
 
-    def _logical_or_expression(self,tree,flag=None):#more to do x2
+    def _logical_or_expression(self,tree,flag=None):
+        if tree.leaf:
+            s = self.dispatch(tree.children[0],flag) + " or " + self.dispatch(tree.children[1],flag)
+            return s
         return self.dispatch(tree.children[0],flag)
 
-    def _logical_and_expression(self,tree,flag=None):#more to do x2
+    def _logical_and_expression(self,tree,flag=None):
+        if tree.leaf:
+            s = self.dispatch(tree.children[0],flag) + " and " + self.dispatch(tree.children[1],flag)
+            return s
         return self.dispatch(tree.children[0],flag)
 
-    def _equality_expression(self,tree,flag=None):#more to do x3
-        return self.dispatch(tree.children[0],flag)
-
-    def _relational_expression(self,tree,flag=None):#more to do x5
+    def _equality_expression(self,tree,flag=None):
         if tree.leaf:
             s = self.dispatch(tree.children[0],flag) + tree.leaf + self.dispatch(tree.children[1],flag)
             return s
         return self.dispatch(tree.children[0],flag)
 
-    def _additive_expression(self,tree,flag=None):#more to do x3
+    def _relational_expression(self,tree,flag=None):
+        if tree.leaf:
+            s = self.dispatch(tree.children[0],flag) + tree.leaf + self.dispatch(tree.children[1],flag)
+            return s
         return self.dispatch(tree.children[0],flag)
 
-    def _multiplicative_expression(self,tree,flag=None):#more to do x3
+    def _additive_expression(self,tree,flag=None):
+        if tree.leaf:
+            s = self.dispatch(tree.children[0],flag) + tree.leaf + self.dispatch(tree.children[1],flag)
+            return s
+        return self.dispatch(tree.children[0],flag)
+
+    def _multiplicative_expression(self,tree,flag=None):
+        if tree.leaf:
+            s = self.dispatch(tree.children[0],flag) + tree.leaf + self.dispatch(tree.children[1],flag)
+            return s
         return self.dispatch(tree.children[0],flag)
 
     def flatmap_method(self, name, param):
