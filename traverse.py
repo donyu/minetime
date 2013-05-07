@@ -115,16 +115,40 @@ class Traverse(object):
 
     def _assignment_expression(self, tree,flag=None):
         x = self.dispatch(tree.children[0],flag) # x has name, y has params
-        print x
-        if type(x) is tuple:
-            if x[0] == "Flatmap": 
-                self.symbols[tree.leaf] = "MAP" # add to symbol table
-                return self.flatmap_method(tree.leaf, x[1])
-        else: # assigning a point right now
-            if x in self.tempPoints:
-                self.symbols[tree.leaf] = "POINT"
-                self.tempPoints.remove(x)
-            return tree.leaf + "=" + x
+        print x,"dfsdf"
+        if not tree.leaf:
+            return x
+        else:
+            if type(x) is tuple:
+                if x[0] == "Flatmap": 
+                    self.symbols[tree.leaf] = "MAP" # add to symbol table
+                    return self.flatmap_method(tree.leaf, x[1])
+            else: # assigning a point right now
+                if x in self.tempPoints:
+                    self.symbols[tree.leaf] = "POINT"
+                    self.tempPoints.remove(x)
+                return tree.leaf + "=" + x
+
+    def _logical_or_expression(self,tree,flag=None):#more to do x2
+        return self.dispatch(tree.children[0],flag)
+
+    def _logical_and_expression(self,tree,flag=None):#more to do x2
+        return self.dispatch(tree.children[0],flag)
+
+    def _equality_expression(self,tree,flag=None):#more to do x3
+        return self.dispatch(tree.children[0],flag)
+
+    def _relational_expression(self,tree,flag=None):#more to do x5
+        if tree.leaf:
+            s = self.dispatch(tree.children[0],flag) + tree.leaf + self.dispatch(tree.children[1],flag)
+            return s
+        return self.dispatch(tree.children[0],flag)
+
+    def _additive_expression(self,tree,flag=None):#more to do x3
+        return self.dispatch(tree.children[0],flag)
+
+    def _multiplicative_expression(self,tree,flag=None):#more to do x3
+        return self.dispatch(tree.children[0],flag)
 
     def flatmap_method(self, name, param):
         if len(param) != 4:
