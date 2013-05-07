@@ -282,7 +282,8 @@ def p_error(p):
 data_1 = '''
 def main(){
 x = Flatmap("testfiles/testmap",500,500,500);
-b = (10,20,30);
+a = 5;
+b = Point(a,10,20);
 x.add(block(COBBLE), b);
 x.close();
 }

@@ -1,5 +1,6 @@
 import sys
 import StringIO
+import types
 
 class Traverse(object):
 
@@ -120,10 +121,18 @@ class Traverse(object):
             if x[0] == "Flatmap": 
                 self.symbols[tree.leaf] = "MAP" # add to symbol table
                 return self.flatmap_method(tree.leaf, x[1])
+            elif x[0] == "Point":
+                self.symbols[tree.leaf] = "POINT"
+                return self.point_method(tree.leaf, x[1])
+
         else: # assigning a point right now
             if x in self.tempPoints:
                 self.symbols[tree.leaf] = "POINT"
                 self.tempPoints.remove(x)
+            elif self.isNum(x): # int or string
+                self.symbols[tree.leaf] = "INT"
+            else:
+                self.symbols[tree.leaf] = "STRING"
             return tree.leaf + "=" + x
 
     def flatmap_method(self, name, param):
@@ -145,6 +154,23 @@ class Traverse(object):
             comp = name + "=" + fline + "\n" + line
             return comp
 
+    def point_method(self, name, param):
+        if len(param) != 3:
+            raise Exception("Wrong number of params passed to Flatmap")
+        elif not (self.checkint(param[0]) and self.checkint(param[1]) and self.checkint(param[2])):
+            raise Exception("Parameters passe were not integers")
+        else:
+            self.symbols[name] = "POINT"
+            return name + "=(" + param[0] + "," + param[1] + "," + param[2] + ")"
+            print self.symbols
+
+
+    def checkint(self,s):
+        try:
+            ret = int(s)
+        except ValueError:
+            return self.symbols.get(s) == "INT" 
+        return ret
 
     def _initializer(self, tree, flag=None):
         if tree.leaf:
@@ -253,6 +279,15 @@ class Traverse(object):
             s = s + p
             s = s + "):+\n"
             return s
+
+    def isNum(self, s):
+        """Convert string to either int or float."""
+        try:
+            ret = int(s)
+        except ValueError:
+            return False
+        return ret
+
 
     # def _parameter_list(self,tree, flag=None):
     #     if tree.children == 0:
