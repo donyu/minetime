@@ -1,4 +1,5 @@
 import sys
+import StringIO
 
 class Traverse(object):
 
@@ -25,7 +26,11 @@ class Traverse(object):
 
     def fill(self, text = ""):
         "Indent a piece of text, according to the current indentation level"
-        return "\n"+"    "*self._indent + text
+        s = ""
+        buf = StringIO.StringIO(text)
+        for line in buf:
+            s+= "    "*self._indent + line 
+        return s
 
     def getpython(self):
         return self.x
@@ -162,7 +167,9 @@ class Traverse(object):
         else:
             return self.dispatch(tree.children[0],flag)
 
-    def _parameter_list(self, tree, flag=None):
+    def _parameter_list(self, tree, flag=None): # HAVE TO HANDLE FUNCTION PARAMETERS
+        if len(tree.children) == 0:
+            return ""
         if len(tree.children) == 1:
             return self.dispatch(tree.children[0],flag)
         else:
@@ -229,5 +236,28 @@ class Traverse(object):
             return s
         else:
             return "WHAT"
+
+    def _function_definition(self, tree, flag=None):
+        fname = tree.leaf
+        s = "def " + tree.leaf + "("
+        if len(tree.children) == 2:
+            p = self.dispatch(tree.children[0],flag)
+            s = s + p
+            s = s + "):\n"
+            self.enter()
+            r = self.dispatch(tree.children[1],flag)
+            s += self.fill(r)
+            return s
+        else:
+            p = self.dispatch(tree.children[0],flag)
+            s = s + p
+            s = s + "):+\n"
+            return s
+
+    # def _parameter_list(self,tree, flag=None):
+    #     if tree.children == 0:
+    #         return ""
+    #     else:
+    #         return "SUP DAWG, HANDLE PARAMETERS NOW"
 
 

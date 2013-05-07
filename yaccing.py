@@ -42,9 +42,9 @@ def p_function_definition(p):
                         | DEF ID LPAREN parameter_list RPAREN LCURL RCURL
     '''
     if len(p) == 9:
-        p[0] = Node('function_definition', [p[4], p[7]])
+        p[0] = Node('function_definition', [p[4], p[7]], p[2])
     else:
-        p[0] = Node('function_definition', [p[4]])
+        p[0] = Node('function_definition', [p[4]], p[2])
 
 def p_declaration_list(p):
     '''
@@ -280,10 +280,12 @@ def p_error(p):
 
 
 data_1 = '''
+def main(){
 x = Flatmap("testfiles/testmap",500,500,500);
 b = (10,20,30);
 x.add(block(COBBLE), b);
 x.close();
+}
 '''
 
 data_2 = '''
@@ -299,18 +301,17 @@ parser = yacc.yacc()
 m = Mtlex()
 m.build()
 
-#result1 = parser.parse(data_1, lexer=m.lexer)
-#print result1
-#
-#firstline = '''
-#import logging
-#import os
-#import sys
-#from pymclevel import mclevel
-#from pymclevel.box import BoundingBox'''
-#t = Traverse(result1).getpython()
-#print t 
-#code = firstline + "\n" + t + "\n"
+result1 = parser.parse(data_1, lexer=m.lexer)
+print result1
+
+firstline = '''
+import logging
+import os
+import sys
+from pymclevel import mclevel
+from pymclevel.box import BoundingBox'''
+t = Traverse(result1).getpython()
+code = firstline + "\n" + t + "\n"
 #f = open("hello.py",'w')
 #f.write(code)
-#print code
+print code
