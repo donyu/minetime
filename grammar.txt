@@ -1,5 +1,5 @@
-    function_definition : def ID '(' parameter_list ')' '{' declaration_list '}'
-                        | def ID '(' parameter_list ')' '{' '}'
+    function_definition : 'def' ID '(' parameter_list ')' '{' declaration_list '}'
+                        | 'def' ID '(' parameter_list ')' '{' '}'
 
     declaration_list : declaration
                      | declaration_list declaration
