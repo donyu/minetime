@@ -36,6 +36,12 @@ class Node(object):
             s += indent + children.traverse(i+1)
         return s
 
+def p_function_definition(p):
+    '''
+    function_definition : DEF ID LPAREN parameter_list RPAREN LCURL declaration_list RCURL
+    '''
+    p[0] = Node('function_definition', [p[4], p[7]])
+
 def p_declaration_list(p):
     '''
     declaration_list : declaration
@@ -128,7 +134,6 @@ def p_class_method_expression(p):
 def p_function_expression(p):
     '''
     function_expression : ID LPAREN parameter_list RPAREN
-                        | ID LPAREN RPAREN
     '''
     if len(p) == 5:
         p[0] = Node('function_expression',[p[3]], p[1])
@@ -139,12 +144,14 @@ def p_parameter_list(p):
     '''
     parameter_list : parameter_declaration
                    | parameter_list COMMA parameter_declaration
+                   | 
     '''
     if len(p) == 2:
         p[0] = Node('parameter_list', [p[1]])
-    else:
+    elif len(p) == 4:
         p[0] = Node('parameter_list',[p[1], p[3]])
-
+    else:
+        p[0] = Node('parameter_list')
 
 def p_parameter_declaration(p):
     '''

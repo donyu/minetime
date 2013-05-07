@@ -15,58 +15,73 @@ class TestYaccing(unittest.TestCase):
 
     def test_helloworld(self):
         prog = """\
-               map = Flatmap("testfiles/testmap",500,500,500);
-               map.add(block(COBBLE), (0,0,0));
-               map.close();
+def main() {
+    map = Flatmap("testfiles/testmap",500,500,500);
+    map.add(block(COBBLE), (0,0,0));
+    map.close();
+}
                """
         self.print_result(prog)
 
     def test_compound(self):
         prog = """\
-               { i=0;i=1;i=2; }
+def main() {
+    { i=0;i=1;i=2; }
+}
                """
         self.print_result(prog)
 
     def test_while(self):
         prog = """\
-               while (i=1) {i=1;i=1;i=1;}
-               i = 0;
+def main() {
+    while (i=1) {i=1;i=1;i=1;}
+    i = 0;
+}
                """
         self.print_result(prog)
 
     def test_for(self):
         prog = """
-               for (i = 1; i = 1; i = 1) {
-                   i = 1;
-               }
+def main() {
+    for (i = 1; i = 1; i = 1) {
+        i = 1;
+    }
+}
                """
         self.print_result(prog)
 
     def test_if(self):
         prog = """\
-               if (i=222220) {} 
+def main() {
+    if (i=222220) {} 
+}
                """
         self.print_result(prog)
 
     def test_if_else(self):
         prog = """\
-               if (i = 1)
-                   i = 2;
-               else {
-                   i = 3;
-               }
+def main() {
+    if (i = 1)
+       i = 2;
+    else {
+       i = 3;
+    }
+}
                """
         self.print_result(prog)
 
     def test_if_elseif_else(self):
         prog = """\
-               if (i = 1)
-                   i = 2;
-               else if (i=2) {
-                   i = 3;
-               } else
-                   i = 4;
+def main() {
+    if (i = 1)
+       i = 2;
+    else if (i=2) {
+       i = 3;
+    } else
+       i = 4;
+}
                """
+        print prog
         self.print_result(prog)
 
     def test_0_bug(self):
@@ -74,7 +89,9 @@ class TestYaccing(unittest.TestCase):
         BUG: Does not display 0 when assigned
         """
         prog = """\
-               i = 0;
+def main() {
+    i = 0;
+}
                """
         self.print_result(prog)
 
