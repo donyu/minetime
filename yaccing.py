@@ -1,7 +1,7 @@
 import ply.yacc as yacc
 import sys
 from lexing import Mtlex
-from NewTraverse import *
+from traverse import *
 
 tokens = Mtlex.tokens
 
