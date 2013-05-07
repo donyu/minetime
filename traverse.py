@@ -20,6 +20,8 @@ class Traverse(object):
         self.tempPoints = set()
         # Type table for variables 
         self.symbols = {}
+        self.values = {}
+        self.waitingfor = set()
         self._indent = 0
         self.x = self.dispatch(tree)
         self.f.write("")
@@ -34,6 +36,8 @@ class Traverse(object):
         return s
 
     def getpython(self):
+        print self.symbols
+        print self.values
         return self.x
 
     def flatten(self, x):
@@ -133,6 +137,7 @@ class Traverse(object):
                     self.tempPoints.remove(x)
                 elif self.isNum(x): # int or string
                     self.symbols[tree.leaf] = "INT"
+                    self.values[tree.leaf] = self.isNum(x)
                 else:
                     self.symbols[tree.leaf] = "STRING"
                 return tree.leaf + "=" + x
@@ -180,16 +185,20 @@ class Traverse(object):
         elif not (self.checkint(param[1]) and self.checkint(param[2]) and self.checkint(param[3])):
             raise Exception("Parameters passed were not integers for map size")
         else:
-            sizex = param[1]
-            sizey = param[2]
-            sizez = param[3]
-            x = str(int(int(sizex) * 1/2 * -1))
-            y = str(0)
-            z = str(int(int(sizez) * 1/2 * -1))
-            if sizey > 255:
-                sizey = 255
-            point = "(" + x + "," + y + "," + z + ")"
-            size = "(" + str(sizex) + "," + str(sizey) + "," + str(sizez) + ")"
+            if self.getint(param[1]) and self.getint(param[2]) and self.getint(param[3]):
+                sizex = self.getint(param[1])
+                sizey = self.getint(param[2])
+                sizez = self.getint(param[3])
+                x = str(int(int(sizex) * 1/2 * -1))
+                y = str(0)
+                z = str(int(int(sizez) * 1/2 * -1))
+                if sizey > 255:
+                    sizey = 255
+                size = "(" + str(sizex) + "," + str(sizey) + "," + str(sizez) + ")"
+                point = "(" + x + "," + y + "," + z + ")"
+            else:
+                point = "(" + param[1] + "*-0.5," + param[2] + "*-0.5," + param[3] + "*-0.5)"
+                size = "(" + param[1] + "," + param[2] + "," + param[3] + ")"
             fline = "mclevel.MCInfdevOldLevel(" + param[0] + ", create=True)"
             line = name + ".createChunksInBox(BoundingBox(" + point + "," + size + "))"
             comp = name + "=" + fline + "\n" + line
@@ -203,15 +212,22 @@ class Traverse(object):
         else:
             self.symbols[name] = "POINT"
             return name + "=(" + param[0] + "," + param[1] + "," + param[2] + ")"
-            print self.symbols
+            #print self.symbols
 
 
     def checkint(self,s):
         try:
             ret = int(s)
         except ValueError:
-            return self.symbols.get(s) == "INT" 
+            return self.symbols.get(s) == "INT" or s in self.waitingfor 
         return ret
+
+    def getint(self,s):
+        if self.checkint(s):
+            try:
+                return int(s)
+            except ValueError:
+                return self.values.get(s)
 
     def _initializer(self, tree, flag=None):
         if tree.leaf:
@@ -265,7 +281,7 @@ class Traverse(object):
         return self.dispatch(tree.children[0],flag)
 
     def _expression_statement(self,tree,flag=None):
-        print "HI",self.dispatch(tree.children[0],flag)
+        #print "HI",self.dispatch(tree.children[0],flag)
         return self.dispatch(tree.children[0],flag)
 
     def _statement(self,tree,flag=None):
@@ -321,8 +337,16 @@ class Traverse(object):
         s = "def " + tree.leaf + "("
         if len(tree.children) == 2:
             p = self.dispatch(tree.children[0],flag)
-            s = s + p
+            comma = False
+            for a in p:
+                if comma:
+                    s += ","
+                else:
+                    comma = True
+                s += a
+                self.waitingfor.add(a)
             s = s + "):\n"
+            #print self.waitingfor
             r = self.dispatch(tree.children[1],flag)
             self.enter()
             s += self.fill(r)

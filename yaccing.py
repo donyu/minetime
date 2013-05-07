@@ -234,7 +234,7 @@ def p_parameter_declaration(p):
 
 def p_primary_expression(p):
     '''
-    primary_expression : ID
+    primary_expression : ID 
                        | STRING
                        | NUMBER
                        | point_gen
@@ -282,7 +282,7 @@ def p_error(p):
 data_1 = '''
 def main(){
 x = Flatmap("testfiles/testmap",500,500,500);
-a = 5;
+a = 10;
 b = Point(a,a,a);
 if (i = 1)
 {
