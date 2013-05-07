@@ -6,11 +6,18 @@ Minetime, a language for creating structures in Minecraft.
 TODO
 ----
 
-* Make grammar handle statement like if (x>3) or if (x==3)
-* Update grammar to allow class methods in if statments
-* Traversal for if statments
-* Traversal for if else
-* Make grammar handle elif
+Done
+* Make grammar handle statement like if (x>3) or if (x==3) - done
+* Traversal for if statments - done
+* Traversal for if else - done 
+* Update grammar to allow methods like map.add to be called in if statments - done
+(Stephen, I made a slight change to the grammar - can you take a look at the diff's when you get a chance)
+
+Still to do
+* Make grammar handle elsif
+* Type checking (Don)
+* Functions and scope checking
+* Figuring out what to do for "for" loops
 
 Environment Set Up Instructions
 -------------------------------

@@ -60,7 +60,6 @@ def p_declaration_list(p):
 def p_declaration(p):
     '''
     declaration : statement
-                | class_method_expression SEMICOLON
     '''
     p[0] = Node('declaration', [p[1]])
 
@@ -70,6 +69,7 @@ def p_statement(p):
               | expression_statement
               | iteration_statement
               | selection_statement
+              | class_method_expression SEMICOLON
     '''
     p[0] = Node('statement', [p[1]]) 
 
@@ -286,8 +286,7 @@ a = 10;
 b = Point(a,a,a);
 if (i*5<=30 && x!=5)
 {
-   i = 2;
-   a = 3;
+    x.add(block(COBBLE), b); 
 }
 else {
    i = 3;
