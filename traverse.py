@@ -8,12 +8,14 @@ class Traverse(object):
                       "block": "materials.blockWithID", 
                       "add": "fillBlocks",
                       "close": "saveInPlace"}
+        self.flistsymbol = {"close" : "MAP"}
         self.blocks = {"COBBLE": 4, 
                        "AIR": 0, 
                        "STONE": 1, 
                        "GRASS":2, 
                        "DIRT": 3}
         self.future_imports = []
+        self.tempPoints = set()
         # Type table for variables 
         self.symbols = {}
         self._indent = 0
@@ -23,7 +25,7 @@ class Traverse(object):
 
     def fill(self, text = ""):
         "Indent a piece of text, according to the current indentation level"
-        self.f.write("\n"+"    "*self._indent + text)
+        return "\n"+"    "*self._indent + text
 
     def getpython(self):
         return self.x
@@ -43,14 +45,15 @@ class Traverse(object):
 
     def enter(self):
         "Print ':', and increase the indentation."
-        self.write(":")
         self._indent += 1
+        return ":"
 
     def leave(self):
         "Decrease the indentation level."
         self._indent -= 1
 
-    def dispatch(self, tree, flag=None):
+    # calls the function corresponding to the name of the node of the tree. Call on a single node and not a list
+    def dispatch(self, tree, flag=None): 
         "Dispatcher function, dispatching tree type T to method _T."
         if isinstance(tree, list):
             for t in tree:
@@ -65,8 +68,10 @@ class Traverse(object):
             return str(self.blocks[tree.leaf])
         elif flag == "block":
             raise Exception("Not a valid block type")
-        else:
+        elif tree.leaf:
             return str(tree.leaf)
+        else: # It is a point
+            return self.dispatch(tree.children[0],flag)
 
     def _class_method_expression(self,tree,flag=None):
         s = tree.leaf
@@ -77,13 +82,24 @@ class Traverse(object):
         if tree.leaf == "add":
             return self.add_method(tree,flag)
         elif tree.leaf in self.flist:
+            if tree.leaf in self.flistsymbol:
+                if not self.symbols.get(flag) == self.flistsymbol[tree.leaf]:
+                    raise Exception(tree.leaf + " method called on a non " + self.flistsymbol[tree.leaf] + " type")
             return flag + "." + self.flist[tree.leaf] + "()"
 
     def add_method(self,tree,flag=None):
+        # add must be called on a map type
+        if not self.symbols.get(flag) == "MAP":
+            raise Exception("Add method called on a non map type")
         a = flag + "." + self.flist[tree.leaf] + "("
         x = self.dispatch(tree.children[0],flag) # x[0] has block with number, x[1] has point
         if len(x) != 2:
             raise Exception("Wrong number of parameters given to add method")
+        print "It is:",x[1]
+        if not self.symbols.get(x[1]) == "POINT" and not x[1] in self.tempPoints:
+            raise Exception("Not a valid point")
+        if x[1] in self.tempPoints:
+            self.tempPoints.remove(x[1])
         p1 = "BoundingBox(origin=" + x[1] + ",size=(1,1,1)),"
         p2 = flag + "." + x[0]
         a+= p1 + p2 + ")"
@@ -93,10 +109,17 @@ class Traverse(object):
         return self.dispatch(tree.children[0],flag)
 
     def _assignment_expression(self, tree,flag=None):
-        [x,y] = self.dispatch(tree.children[0],flag)
-        if x == "Flatmap":
-            self.symbols[tree.leaf] = x
-            return self.flatmap_method(tree.leaf, y)
+        x = self.dispatch(tree.children[0],flag) # x has name, y has params
+        print x
+        if type(x) is tuple:
+            if x[0] == "Flatmap": 
+                self.symbols[tree.leaf] = "MAP" # add to symbol table
+                return self.flatmap_method(tree.leaf, x[1])
+        else: # assigning a point right now
+            if x in self.tempPoints:
+                self.symbols[tree.leaf] = "POINT"
+                self.tempPoints.remove(x)
+            return tree.leaf + "=" + x
 
     def flatmap_method(self, name, param):
         if len(param) != 4:
@@ -154,6 +177,57 @@ class Traverse(object):
         #     self.write(",")
         #     self.dispatch(tree.children[1])
 
+    # the following are incomplete and won't work with more complicated statements    
     def _parameter_declaration(self, tree, flag=None):
         return self.dispatch(tree.children[0],flag)
+
+    def _declaration_list(self, tree, flag=None):
+        if len(tree.children) == 1:
+            return self.dispatch(tree.children[0],flag)
+        else:
+            return self.dispatch(tree.children[0],flag) + "\n" + self.dispatch(tree.children[1],flag)
+
+    def _declaration(self, tree, flag=None):
+        return self.dispatch(tree.children[0],flag)
+
+    def _expression_statement(self,tree,flag=None):
+        print "HI",self.dispatch(tree.children[0],flag)
+        return self.dispatch(tree.children[0],flag)
+
+    def _statement(self,tree,flag=None):
+        return self.dispatch(tree.children[0],flag)
+
+    def _statement_list(self,tree,flag=None):
+        if len(tree.children) == 1:
+            return self.dispatch(tree.children[0],flag)
+        else:
+            return self.dispatch(tree.children[0],flag) + self.dispatch(tree.children[1],flag)
+
+    def _expression_statement(self,tree,flag=None):
+        if len(tree.children) != 0:
+            return self.dispatch(tree.children[0],flag)
+        else:
+            return ""
+
+    def _compound_statement(self,tree,flag=None):
+        if len(tree.children) == 0:
+            return ""
+        else:
+            return self.dispatch(tree.children[0],flag)
+
+    def _point_gen(self,tree,flag=None):
+        self.tempPoints.add(tree.leaf)
+        return tree.leaf
+
+    def _selection_statement(self,tree,flag=None):
+        if len(tree.children) == 2: # if statement
+            s = "if " + self.dispatch(tree.children[0],flag) + self.enter()
+            r = self.dispatch(tree.children[1],flag)
+            print r
+            s += self.fill(r)
+            self.leave()
+            return s
+        else:
+            return "WHAT"
+
 
