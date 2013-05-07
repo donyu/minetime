@@ -315,6 +315,17 @@ class Traverse(object):
             self.leave()
             return s
 
+    def _iteration_statement(self,tree,flag=None):
+        if len(tree.children) == 2: # while statement
+            s = "while " + self.dispatch(tree.children[0],flag) + ":\n"
+            r = self.dispatch(tree.children[1],flag)
+            # adding the indent yo
+            self.enter()
+            s += self.fill(r)
+            self.leave()
+            return s
+        else: #for statement
+            return "for not implemented"
 
     def _function_definition(self, tree, flag=None):
         fname = tree.leaf
@@ -341,7 +352,6 @@ class Traverse(object):
         except ValueError:
             return False
         return ret
-
 
     # def _parameter_list(self,tree, flag=None):
     #     if tree.children == 0:
