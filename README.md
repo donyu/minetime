@@ -10,10 +10,12 @@ Done
 * Make grammar handle statement like if (x>3) or if (x==3) - done
 * Traversal for if statments - done
 * Traversal for if else - done 
+* Traversal for while - done
 * Update grammar to allow methods like map.add to be called in if statments - done
 (Stephen, I made a slight change to the grammar - can you take a look at the diff's when you get a chance)
 
 Still to do
+* Add/Change grammar for a = a + b + ... (does not work now!!)
 * Make grammar handle elsif
 * Make grammar handle multiple functions
 * make grammar handle return statements
