@@ -5,7 +5,6 @@ class Mtlex:
     reserved = {'if' : 'IF', 
                 'then' : 'THEN', 
                 'else' : 'ELSE', 
-                'while' : 'WHILE', 
                 'elif' : 'ELIF',
                 'def' : 'DEF',
                 'for' : 'FOR',
