@@ -1,3 +1,9 @@
+    translation_unit : external_declaration
+                     | translation_unit external_declaration
+
+    external_declaration : function_definition
+                         | declaration
+
     function_definition : 'def' ID '(' parameter_list ')' '{' declaration_list '}'
                         | 'def' ID '(' parameter_list ')' '{' '}'
 
@@ -5,12 +11,13 @@
                      | declaration_list declaration
 
     declaration : statement
-                | class_method_expression ';'
 
     statement : compound_statement
               | expression_statement
               | iteration_statement
               | selection_statement
+              | class_method_expression
+              | return_statement
 
     compound_statement : '{' '}'
                        | '{' statement_list '}'
@@ -23,42 +30,43 @@
 
     expression : assignment_expression 
 
-    assignment_expression : ID '=' initializer
+    assignment_expression : ID '=' NEW initializer
+                          | ID '=' assignment_expression
                           | logical_or_expression
 
     logical_or_expression : logical_and_expression
-                          | logical_or_expression '||' clogical_and_expression
+                          | logical_or_expression '||' logical_and_expression
 
     logical_and_expression : equality_expression
-                           | logical_and_expression '&&' cequality_expression
+                           | logical_and_expression '&&' equality_expression
 
     equality_expression : relational_expression
-                        | equality_expression '==' crelational_expression
-                        | equality_expression '!=' crelational_expression
+                        | equality_expression '==' relational_expression
+                        | equality_expression '!=' relational_expression
 
     relational_expression : additive_expression
-                          | relational_expression '>' cadditive_expression
-                          | relational_expression '<' cadditive_expression
-                          | relational_expression '>=' cadditive_expression
-                          | relational_expression '<=' cadditive_expression
+                          | relational_expression '>' additive_expression
+                          | relational_expression '<' additive_expression
+                          | relational_expression '>=' additive_expression
+                          | relational_expression '<=' additive_expression
 
     additive_expression : multiplicative_expression
-                        | additive_expression '+' cmultiplicative_expression
-                        | additive_expression '-' cmultiplicative_expression
+                        | additive_expression '+' multiplicative_expression
+                        | additive_expression '-' multiplicative_expression
 
     multiplicative_expression : primary_expression
-                              | multiplicative_expression '*' cprimary_expression
-                              | multiplicative_expression '/' cprimary_expression
+                              | multiplicative_expression '*' primary_expression
+                              | multiplicative_expression '/' primary_expression
 
     initializer : ID '(' parameter_list ')'
                 | primary_expression
 
-    class_method_expression : ID DOTOPERATOR function_expression
+    class_method_expression : ID '.' function_expression ';'
 
     function_expression : ID '(' parameter_list ')'
 
     parameter_list : parameter_declaration
-                   | parameter_list COMMA parameter_declaration
+                   | parameter_list ',' parameter_declaration
                    | 
 
     parameter_declaration : initializer
@@ -76,3 +84,6 @@
 
     selection_statement : 'if' '(' expression ')' statement
                         | 'if' '(' expression ')' statement 'else' statement
+
+    return_statement : 'return' ';'
+                     | 'return' expression ';'
