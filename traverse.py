@@ -80,8 +80,10 @@ class Traverse(object):
             raise Exception("Not a valid block type")
         elif tree.leaf:
             return str(tree.leaf)
-        else: # It is a point
+        elif len(tree.children) == 1: # It is a point
             return self.dispatch(tree.children[0],flag)
+        else:
+            return "0"
 
     def _class_method_expression(self,tree,flag=None):
         s = tree.leaf
@@ -96,6 +98,14 @@ class Traverse(object):
                 if not self.symbols.get(flag) == self.flistsymbol[tree.leaf]:
                     raise Exception(tree.leaf + " method called on a non " + self.flistsymbol[tree.leaf] + " type")
             return flag + "." + self.flist[tree.leaf] + "()"
+        else:
+            if len(tree.children)==1:
+                s = self.dispatch(tree.children[0],flag)
+                s = self.listtoparams(s)
+                print s
+            else:
+                s = ""
+            return tree.leaf + "(" + s + ")"
 
     def add_method(self,tree,flag=None):
         # add must be called on a map type
@@ -142,6 +152,18 @@ class Traverse(object):
                     self.symbols[tree.leaf] = "STRING"
                 return tree.leaf + "=" + x
 
+    def listtoparams(self,l,x=None):
+        s = ""
+        comma = False
+        for a in l:
+            if comma:
+                s += ","
+            else:
+                comma = True
+            s += a
+            if x:
+                self.waitingfor.add(a)
+        return s
 
     def _logical_or_expression(self,tree,flag=None):
         if tree.leaf:
@@ -216,11 +238,12 @@ class Traverse(object):
 
 
     def checkint(self,s):
+        if not s : return False
         try:
             ret = int(s)
         except ValueError:
             return self.symbols.get(s) == "INT" or s in self.waitingfor 
-        return ret
+        return True
 
     def getint(self,s):
         if self.checkint(s):
@@ -346,6 +369,14 @@ class Traverse(object):
     def _external_declaration(self,tree,flag=None):
         return self.dispatch(tree.children[0],flag)
 
+    def _translation_unit(self,tree,flag=None):
+        if len(tree.children) == 1:
+            return self.dispatch(tree.children[0],flag)
+        else:
+            s = self.dispatch(tree.children[0],flag)
+            t = self.dispatch(tree.children[1],flag)
+            return s + "\n\n" + t
+
     def _function_definition(self, tree, flag=None):
         fname = tree.leaf
         s = "def " + tree.leaf + "("
@@ -368,8 +399,15 @@ class Traverse(object):
             return s
         else:
             p = self.dispatch(tree.children[0],flag)
-            s = s + p
-            s = s + "):+\n"
+            comma = False
+            for a in p:
+                if comma:
+                    s += ","
+                else:
+                    comma = True
+                s += a
+                self.waitingfor.add(a)
+            s = s + "):"+"\n"
             return s
 
     def _return_statement(self, tree, flag=None):

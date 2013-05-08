@@ -42,9 +42,9 @@ def p_translation_unit(p):
                      | translation_unit external_declaration
     '''
     if len(p) == 2:
-        p[0] = Node('external_declaration', [p[1]])
+        p[0] = Node('translation_unit', [p[1]])
     else:
-        p[0] = Node('external_declaration', [p[1], p[2]])
+        p[0] = Node('translation_unit', [p[1], p[2]])
 
 def p_external_declaration(p):
     '''
@@ -87,6 +87,7 @@ def p_statement(p):
               | iteration_statement
               | selection_statement
               | class_method_expression
+              | function_expression
               | return_statement
     '''
     p[0] = Node('statement', [p[1]]) 
@@ -311,19 +312,20 @@ def p_error(p):
 
 
 data_1 = '''
-
-
 def main() {
-    i = 1;
-    return a+5;
-    return;
+x = new Flatmap("testfiles/testmap",500,500,500);
+makeblocks(0,10);
+x.close();
 }
 
-i = 1;
-def f(1, 2) {
+def makeblocks(start,end) {
+    while (start < end)
+    {
+        c = new Point(0,0,start);
+        x.add(block(COBBLE), c);
+        start = start + 1;
+    }
 }
-
-
 '''
 
 data_2 = '''
