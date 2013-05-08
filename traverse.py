@@ -343,6 +343,9 @@ class Traverse(object):
         else: #for statement
             return "for not implemented"
 
+    def _external_declaration(self,tree,flag=None):
+        return self.dispatch(tree.children[0],flag)
+
     def _function_definition(self, tree, flag=None):
         fname = tree.leaf
         s = "def " + tree.leaf + "("
@@ -368,6 +371,12 @@ class Traverse(object):
             s = s + p
             s = s + "):+\n"
             return s
+
+    def _return_statement(self, tree, flag=None):
+        if tree.children:
+            s = "return " + self.dispatch(tree.children[0],flag)
+            return s
+        return "return "
 
     def isNum(self, s):
         """Convert string to either int or float."""

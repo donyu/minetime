@@ -311,24 +311,19 @@ def p_error(p):
 
 
 data_1 = '''
-def main(){
-x = Flatmap("testfiles/testmap",500,500,500);
-a = 10;
-b = Point(a,a,a);
-if (i*5<=30 && x!=5)
-{
-    x.add(block(COBBLE), b); 
+
+
+def main() {
+    i = 1;
+    return a+5;
+    return;
 }
-else {
-   i = 3;
+
+i = 1;
+def f(1, 2) {
 }
-while (i*5<=30 && x!=5) 
-{
-    i=3333;
-}
-x.add(block(COBBLE), b);
-x.close();
-}
+
+
 '''
 
 data_2 = '''
@@ -344,17 +339,17 @@ parser = yacc.yacc()
 m = Mtlex()
 m.build()
 
-#result1 = parser.parse(data_1, lexer=m.lexer)
-#print result1
-#
-#firstline = '''
-#import logging
-#import os
-#import sys
-#from pymclevel import mclevel
-#from pymclevel.box import BoundingBox'''
-#t = Traverse(result1).getpython()
-#code = firstline + "\n" + t + "\n"
-##f = open("hello.py",'w')
-##f.write(code)
-#print code
+result1 = parser.parse(data_1, lexer=m.lexer)
+print result1
+
+firstline = '''
+import logging
+import os
+import sys
+from pymclevel import mclevel
+from pymclevel.box import BoundingBox'''
+t = Traverse(result1).getpython()
+code = firstline + "\n" + t + "\n"
+#f = open("hello.py",'w')
+#f.write(code)
+print code
