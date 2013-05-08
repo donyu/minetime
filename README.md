@@ -6,26 +6,27 @@ Minetime, a language for creating structures in Minecraft.
 TODO
 ----
 
-Done
-* Make grammar handle statement like if (x>3) or if (x==3) - done
-* Traversal for if statments - done
-* Traversal for if else - done 
-* Traversal for while - done
-* Update grammar to allow methods like map.add to be called in if statments - done
-(Stephen, I made a slight change to the grammar - can you take a look at the diff's when you get a chance)
-
 Still to do
-* Add/Change grammar for a = a + b + ... (does not work now!!) - done
+* TYPE CHECKING AND FUNCTION SCOPING AND STUFF 
 * Make grammar handle elsif - done?
-* Make grammar handle multiple functions - done
-* make grammar handle return statements - done
-* Type checking (Don)
 * Functions and scope checking
 * Figuring out what to do for "for" loops
 
 Functions 
 * symbol table with list of functions and the arguments they take in and their names
 * type checking - some of it happens at runtime, but we can check if the number of arguements etc is fine 
+
+Done
+* Make grammar handle statement like if (x>3) or if (x==3) - done
+* Traversal for if statments - done
+* Traversal for if else - done 
+* Traversal for while - done
+* Update grammar to allow methods like map.add to be called in if statments - done
+* Add/Change grammar for a = a + b + ... (does not work now!!) - done
+* Make grammar handle multiple functions - done
+* make grammar handle return statements - done
+* Make traverse handle multiple functions - done
+
 
 Environment Set Up Instructions
 -------------------------------
