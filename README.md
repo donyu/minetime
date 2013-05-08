@@ -15,10 +15,10 @@ Done
 (Stephen, I made a slight change to the grammar - can you take a look at the diff's when you get a chance)
 
 Still to do
-* Add/Change grammar for a = a + b + ... (does not work now!!)
-* Make grammar handle elsif
-* Make grammar handle multiple functions
-* make grammar handle return statements
+* Add/Change grammar for a = a + b + ... (does not work now!!) - done
+* Make grammar handle elsif - done?
+* Make grammar handle multiple functions - done
+* make grammar handle return statements - done
 * Type checking (Don)
 * Functions and scope checking
 * Figuring out what to do for "for" loops

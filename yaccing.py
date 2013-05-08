@@ -12,7 +12,7 @@ precedence = (
 
 class Node(object):
 
-    def __init__(self,type,children=None,leaf=None,code=None):
+    def __init__(self, type, children=None, leaf=None, code=None):
          self.type = type
          if children:
               self.children = children
@@ -35,6 +35,23 @@ class Node(object):
         for children in self.children:
             s += indent + children.traverse(i+1)
         return s
+
+def p_translation_unit(p):
+    '''
+    translation_unit : external_declaration
+                     | translation_unit external_declaration
+    '''
+    if len(p) == 2:
+        p[0] = Node('external_declaration', [p[1]])
+    else:
+        p[0] = Node('external_declaration', [p[1], p[2]])
+
+def p_external_declaration(p):
+    '''
+    external_declaration : function_definition
+                         | declaration
+    '''
+    p[0] = Node('external_declaration', [p[1]])
 
 def p_function_definition(p):
     '''
@@ -69,7 +86,8 @@ def p_statement(p):
               | expression_statement
               | iteration_statement
               | selection_statement
-              | class_method_expression SEMICOLON
+              | class_method_expression
+              | return_statement
     '''
     p[0] = Node('statement', [p[1]]) 
 
@@ -113,11 +131,14 @@ def p_expression(p):
 
 def p_assignment_expression(p):
     '''
-    assignment_expression : ID ASSIGN initializer
+    assignment_expression : ID ASSIGN NEW initializer
+                          | ID ASSIGN assignment_expression
                           | logical_or_expression
     '''
     if len(p) == 4:
         p[0] = Node('assignment_expression', [p[3]], p[1])
+    elif len(p) == 5:
+        p[0] = Node('assignment_expression', [p[4]], p[1])
     else:
         p[0] = Node('assignment_expression', [p[1]])
 
@@ -199,7 +220,7 @@ def p_initializer(p):
 
 def p_class_method_expression(p):
     '''
-    class_method_expression : ID DOTOPERATOR function_expression
+    class_method_expression : ID DOTOPERATOR function_expression SEMICOLON
     '''
     p[0] = Node('class_method_expression',[p[3]], p[1])
 
@@ -274,6 +295,16 @@ def p_selection_statement(p):
     else:
         p[0] = Node('selection_statement', [p[3], p[5], p[7]])
 
+def p_return_statement(p):
+    '''
+    return_statement : RETURN SEMICOLON
+                     | RETURN expression SEMICOLON
+    '''
+    if len(p) == 4:
+        p[0] = Node('return_statement', [p[2]])
+    else:
+        p[0] = Node('return_statement')
+
 def p_error(p):
     # we should throw compiler error in this case
     print 'there is no grammar for this'
@@ -313,17 +344,17 @@ parser = yacc.yacc()
 m = Mtlex()
 m.build()
 
-result1 = parser.parse(data_1, lexer=m.lexer)
-print result1
-
-firstline = '''
-import logging
-import os
-import sys
-from pymclevel import mclevel
-from pymclevel.box import BoundingBox'''
-t = Traverse(result1).getpython()
-code = firstline + "\n" + t + "\n"
-#f = open("hello.py",'w')
-#f.write(code)
-print code
+#result1 = parser.parse(data_1, lexer=m.lexer)
+#print result1
+#
+#firstline = '''
+#import logging
+#import os
+#import sys
+#from pymclevel import mclevel
+#from pymclevel.box import BoundingBox'''
+#t = Traverse(result1).getpython()
+#code = firstline + "\n" + t + "\n"
+##f = open("hello.py",'w')
+##f.write(code)
+#print code

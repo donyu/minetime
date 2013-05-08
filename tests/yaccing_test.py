@@ -16,7 +16,7 @@ class TestYaccing(unittest.TestCase):
     def test_helloworld(self):
         prog = """\
 def main() {
-    x = Flatmap("testfiles/testmap",500,500,500);
+    x = new Flatmap("testfiles/testmap",500,500,500);
     b = (10,20,30);
     x.add(block(COBBLE), b);
     x.close();
@@ -42,7 +42,7 @@ def main() {
         self.print_result(prog)
 
     def test_for(self):
-        prog = """
+        prog = """\
 def main() {
     for (i = 1; i = 1; i = 1) {
         i = 1;
@@ -125,6 +125,41 @@ def main(1,2) {
         prog = """\
 def main() {
     a * (b - 3) + 3 || 5;
+}
+               """
+        self.print_result(prog)
+
+    def test_external(self):
+        prog = """\
+i = 1;
+
+def f(1, 2) {
+}
+
+def main() {
+    if (a > 3) {
+        i;
+    }
+}
+               """
+        self.print_result(prog)
+
+    def test_return(self):
+        prog = """\
+
+def main() {
+    i = 1;
+    return 1;
+    return;
+}
+               """
+        self.print_result(prog)
+
+    def test_assignment(self):
+        prog = """\
+def main() {
+    i = a + 2;
+    j = 3 < 2;
 }
                """
         self.print_result(prog)
