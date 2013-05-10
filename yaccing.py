@@ -308,7 +308,10 @@ def p_return_statement(p):
 
 def p_error(p):
     # we should throw compiler error in this case
-    print 'there is no grammar for this'
+    if p == None:
+        print "Syntax error at last token."
+    else:
+        print "Syntax error around line number {0}".format(p.lineno)
 
 
 data_1 = '''
@@ -341,17 +344,17 @@ parser = yacc.yacc()
 m = Mtlex()
 m.build()
 
-result1 = parser.parse(data_1, lexer=m.lexer)
-print result1
-
-firstline = '''
-import logging
-import os
-import sys
-from pymclevel import mclevel
-from pymclevel.box import BoundingBox'''
-t = Traverse(result1).getpython()
-code = firstline + "\n" + t + "\n"
-#f = open("hello.py",'w')
-#f.write(code)
-print code
+#result1 = parser.parse(data_1, lexer=m.lexer)
+#print result1
+#
+#firstline = '''
+#import logging
+#import os
+#import sys
+#from pymclevel import mclevel
+#from pymclevel.box import BoundingBox'''
+#t = Traverse(result1).getpython()
+#code = firstline + "\n" + t + "\n"
+##f = open("hello.py",'w')
+##f.write(code)
+#print code
