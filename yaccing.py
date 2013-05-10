@@ -55,7 +55,7 @@ def p_external_declaration(p):
 
 def p_function_definition(p):
     '''
-    function_definition : DEF ID LPAREN parameter_list RPAREN LCURL declaration_list RCURL
+    function_definition : DEF ID LPAREN parameter_list RPAREN LCURL statement_list RCURL
                         | DEF ID LPAREN parameter_list RPAREN LCURL RCURL
     '''
     if len(p) == 9:

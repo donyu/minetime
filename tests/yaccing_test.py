@@ -170,6 +170,21 @@ i = 0;
 h
                """
         self.print_result(prog)
+    
+    def test_string_literal(self):
+        prog = """\
+i = "hello world";
+               """
+        self.print_result(prog)
+
+    def test_comments(self):
+        prog = """\
+i = "hello"; $ hello
+$*
+hello hello
+hello hello*$
+               """
+        self.print_result(prog)
 
     def print_result(self, prog):
         result = self.parser.parse(dedent(prog))
