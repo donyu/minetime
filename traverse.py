@@ -10,6 +10,7 @@ class Traverse(object):
                       "block": "materials.blockWithID", 
                       "add": "fillBlocks",
                       "close": "saveInPlace"}
+        self.fargs = {"Flatmap": [str, int, int, int]}
         self.flistsymbol = {"close" : "MAP"}
         self.blocks = {"COBBLE": 4, 
                        "AIR": 0, 
@@ -252,6 +253,22 @@ class Traverse(object):
             except ValueError:
                 return self.values.get(s)
 
+    def num_or_str(self, x):
+        """The argument is a string; convert to a number if possible, or strip it.
+        >>> num_or_str('42')
+        42
+        >>> num_or_str(' 42x ')
+        '42x'
+        """
+        if hasattr(x, '__int__'): return x
+        try:
+            return int(x) 
+        except ValueError:
+            try:
+                return float(x) 
+            except ValueError:
+                    return str(x).strip() 
+
     def _initializer(self, tree, flag=None):
         if tree.leaf:
             if tree.leaf == "block":
@@ -266,8 +283,14 @@ class Traverse(object):
             else:  
                 x = tree.leaf
             if tree.children:
-                y = self.dispatch(tree.children[0],flag)
-                return (x,y)
+                params = self.dispatch(tree.children[0],flag)
+                # initializer argument type checking
+                if tree.leaf in self.fargs:
+                    typed_params = [self.num_or_str(param) for param in params]
+                    init_args = [type(param) for param in typed_params]
+                    if init_args != self.fargs[tree.leaf]:
+                        print "Initializer Type Check Error"
+                return (x, params)
             else:
                 return x
         else:
