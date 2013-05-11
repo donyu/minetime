@@ -10,7 +10,9 @@ class Mtlex:
                 'for' : 'FOR',
                 'while' : 'WHILE',
                 'return' : 'RETURN',
-                'new' : 'NEW'
+                'new' : 'NEW',
+                'true' : 'TRUE',
+                'false' : 'FALSE'
                 }
 
     tokens = ['NUMBER',

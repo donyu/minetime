@@ -259,6 +259,8 @@ def p_primary_expression(p):
     primary_expression : ID 
                        | STRING
                        | NUMBER
+                       | TRUE
+                       | FALSE
                        | point_gen
                        | LPAREN expression RPAREN
     '''
@@ -322,15 +324,16 @@ x.close();
 }
 
 def makeblocks(start,end) {
-    while (start < end)
+    while (true)
     {
         c = new Point(0,0,start);
         x.add(block(COBBLE), c);
         start = start + 1;
     }
-    for (i=0;i<10;i=i+1)
+    for (;start<end;start=start+1)
     {
-        flag = flag + 1;
+        c = new Point(0,0,start);
+        x.add(block(COBBLE), c);
     }
 }
 '''

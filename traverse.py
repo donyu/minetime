@@ -79,7 +79,12 @@ class Traverse(object):
             return str(self.blocks[tree.leaf])
         elif flag == "block":
             raise Exception("Not a valid block type")
+        elif tree.leaf == "true":
+            return "True"
+        elif tree.leaf == "false":
+            return "False"
         elif tree.leaf:
+            print str(tree.leaf)
             return str(tree.leaf)
         elif len(tree.children) == 1: # It is a point
             return self.dispatch(tree.children[0],flag)
