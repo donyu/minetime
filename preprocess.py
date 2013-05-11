@@ -18,5 +18,5 @@ class Processor():
 					raise Exception("File %s can not be imported because it does not exist" 
 													% line.split()[1])
 			else:
-				processed_code.append(line)
-		return ''.join(processed_code)
+				processed_code.append(line + ';')
+		return ''.join(processed_code)[:-1]
