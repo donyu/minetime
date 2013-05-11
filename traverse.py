@@ -387,7 +387,13 @@ class Traverse(object):
             self.leave()
             return s
         else: #for statement
-            return "for not implemented"
+            s = self.dispatch(tree.children[0],flag) + "\n" + "while " + self.dispatch(tree.children[1],flag)  + ":\n"
+            r = self.dispatch(tree.children[3],flag) + "\n" + self.dispatch(tree.children[2],flag)
+            # adding the indent yo
+            self.enter()
+            s += self.fill(r)
+            self.leave()
+            return s
 
     def _external_declaration(self,tree,flag=None):
         return self.dispatch(tree.children[0],flag)

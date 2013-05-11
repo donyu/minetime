@@ -328,6 +328,10 @@ def makeblocks(start,end) {
         x.add(block(COBBLE), c);
         start = start + 1;
     }
+    for (i=0;i<10;i=i+1)
+    {
+        flag = flag + 1;
+    }
 }
 '''
 
@@ -344,17 +348,17 @@ parser = yacc.yacc()
 m = Mtlex()
 m.build()
 
-#result1 = parser.parse(data_1, lexer=m.lexer)
-#print result1
-#
-#firstline = '''
-#import logging
-#import os
-#import sys
-#from pymclevel import mclevel
-#from pymclevel.box import BoundingBox'''
-#t = Traverse(result1).getpython()
-#code = firstline + "\n" + t + "\n"
-##f = open("hello.py",'w')
-##f.write(code)
-#print code
+result1 = parser.parse(data_1, lexer=m.lexer)
+print result1
+
+firstline = '''
+import logging
+import os
+import sys
+from pymclevel import mclevel
+from pymclevel.box import BoundingBox'''
+t = Traverse(result1).getpython()
+code = firstline + "\n" + t + "\n"
+#f = open("hello.py",'w')
+#f.write(code)
+print code
