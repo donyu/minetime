@@ -49,7 +49,7 @@ def p_translation_unit(p):
 def p_external_declaration(p):
     '''
     external_declaration : function_definition
-                         | declaration
+                         | statement
     '''
     p[0] = Node('external_declaration', [p[1]])
 
@@ -63,22 +63,22 @@ def p_function_definition(p):
     else:
         p[0] = Node('function_definition', [p[4]], p[2])
 
-def p_declaration_list(p):
-    '''
-    declaration_list : declaration
-                     | declaration_list declaration
-    '''
-
-    if len(p) == 2:
-        p[0] = Node('declaration_list', [p[1]])
-    else:
-        p[0] = Node('declaration_list', [p[1], p[2]])
-
-def p_declaration(p):
-    '''
-    declaration : statement
-    '''
-    p[0] = Node('declaration', [p[1]])
+#def p_declaration_list(p):
+#    '''
+#    declaration_list : declaration
+#                     | declaration_list declaration
+#    '''
+#
+#    if len(p) == 2:
+#        p[0] = Node('declaration_list', [p[1]])
+#    else:
+#        p[0] = Node('declaration_list', [p[1], p[2]])
+#
+#def p_declaration(p):
+#    '''
+#    declaration : statement
+#    '''
+#    p[0] = Node('declaration', [p[1]])
 
 def p_statement(p):
     '''
