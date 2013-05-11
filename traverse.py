@@ -10,13 +10,19 @@ class Traverse(object):
                       "block": "materials.blockWithID", 
                       "add": "fillBlocks",
                       "close": "saveInPlace"}
-        self.fargs = {"Flatmap": [str, int, int, int]}
+        # function argument types for type-checking
+        self.fargs = {"Flatmap": [str, int, int, int],
+                      "Point": [int, int, int],
+                      "add": ["block", "point"],}
+        self.class_meths = {"Flatmap": ['add', 'close']}
         self.flistsymbol = {"close" : "MAP"}
         self.blocks = {"COBBLE": 4, 
                        "AIR": 0, 
                        "STONE": 1, 
                        "GRASS":2, 
                        "DIRT": 3}
+        self.relops = {'<', '>', '<=', '>=', '==', '!=',
+                       '+', '-', '*', '/', '%'}
         self.future_imports = []
         self.tempPoints = set()
         # Type table for variables 
@@ -101,8 +107,9 @@ class Traverse(object):
             return flag + "." + self.flist[tree.leaf] + "()"
         else:
             if len(tree.children)==1:
-                s = self.dispatch(tree.children[0],flag)
-                s = self.listtoparams(s)
+                params = self.dispatch(tree.children[0],flag)
+                print params, " hi"
+                s = self.listtoparams(params)
                 print s
             else:
                 s = ""
@@ -289,7 +296,7 @@ class Traverse(object):
                     typed_params = [self.num_or_str(param) for param in params]
                     init_args = [type(param) for param in typed_params]
                     if init_args != self.fargs[tree.leaf]:
-                        print "Initializer Type Check Error"
+                        print "Initializer Type Check Error for", tree.leaf
                 return (x, params)
             else:
                 return x
@@ -400,13 +407,38 @@ class Traverse(object):
             t = self.dispatch(tree.children[1],flag)
             return s + "\n\n" + t
 
+    def get_param_types(self, params, tree):
+        ''' will return a list of type objects'''
+        typed_params = []
+        for param in params:
+            typed_params.append(self.get_param_type(param, tree))
+        print typed_params
+        return typed_params
+
+    def get_param_type(self, param, tree):
+        '''traverse tree until we find spot where param has to be certain type'''
+        if tree.leaf == param:
+            return True
+        for child in tree.children:
+            ret_val = self.get_param_type(param, child)
+            if ret_val:
+                if tree.leaf in self.relops:
+                    params = self.dispatch(tree.children[0])
+                    return int
+                if tree.leaf in self.fargs:
+                    params = self.dispatch(tree.children[0])
+                    print params
+                return ret_val
+
     def _function_definition(self, tree, flag=None):
         fname = tree.leaf
         s = "def " + tree.leaf + "("
         if len(tree.children) == 2:
-            p = self.dispatch(tree.children[0],flag)
+            params = self.dispatch(tree.children[0],flag)
+            # find out the necessary types for this new function
+            self.fargs[fname] = self.get_param_types(params, tree.children[1])
             comma = False
-            for a in p:
+            for a in params:
                 if comma:
                     s += ","
                 else:

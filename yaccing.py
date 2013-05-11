@@ -2,6 +2,7 @@ import ply.yacc as yacc
 import sys
 from lexing import Mtlex
 from traverse import *
+from preprocess import *
 
 tokens = Mtlex.tokens
 
@@ -29,6 +30,7 @@ class Node(object):
         indent = "\n" + i*' |'
         if self.leaf:
             if isinstance(self.leaf, Node):
+                print "Node"
                 s += indent + self.leaf.traverse(i+1)
             else:
                 s += indent + str(self.leaf)
@@ -269,7 +271,6 @@ def p_primary_expression(p):
     else:
         p[0] = Node('primary_expression', [], p[1])
 
-
 def p_point_gen(p):
     '''
     point_gen : POINT
@@ -313,21 +314,23 @@ def p_error(p):
     else:
         print "Syntax error around line number {0}".format(p.lineno)
 
-
 data_1 = '''
-def main() {
-x = new Flatmap("testfiles/testmap",500,500,500);
-makeblocks(0,10);
-x.close();
-}
+import hello.mt;
 
-def makeblocks(start,end) {
+def makeblocks(start,end, x) {
+    x = new Flatmap("testfiles/testmap",500,500,500);
     while (start < end)
     {
         c = new Point(0,0,start);
         x.add(block(COBBLE), c);
         start = start + 1;
     }
+}
+
+def main() {
+x = new Flatmap("testfiles/testmap",500,500,500);
+makeblocks(0,"hi", x);
+x.close();
 }
 '''
 
@@ -340,21 +343,34 @@ a = 2
 if (a> 1 ) { a = 1;}
 '''
 
+data_4 = '''
+def main() {
+    x = new Flatmap("testfiles/testmap", 500, 500,500);
+    x.close();
+}
+'''
+
+# generate the parser
 parser = yacc.yacc()
+# generate the lexer to be used with parser
 m = Mtlex()
 m.build()
+# preprocessing step
+preprocessor = Processor()
+data_1 = preprocessor.preprocess(data_1)
+print data_1
 
-#result1 = parser.parse(data_1, lexer=m.lexer)
-#print result1
-#
-#firstline = '''
-#import logging
-#import os
-#import sys
-#from pymclevel import mclevel
-#from pymclevel.box import BoundingBox'''
-#t = Traverse(result1).getpython()
-#code = firstline + "\n" + t + "\n"
-##f = open("hello.py",'w')
-##f.write(code)
-#print code
+# result1 = parser.parse(data_1, lexer=m.lexer)
+# print result1
+
+# firstline = '''
+# import logging
+# import os
+# import sys
+# from pymclevel import mclevel
+# from pymclevel.box import BoundingBox'''
+# t = Traverse(result1).getpython()
+# code = firstline + "\n" + t + "\n"
+# # f = open("hello.py",'w')
+# # f.write(code)
+# print code
