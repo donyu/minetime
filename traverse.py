@@ -12,9 +12,12 @@ class Traverse(object):
                       "close": "saveInPlace"}
         # function argument types for type-checking
         self.fargs = {"Flatmap": [str, int, int, int],
-                      "Point": [int, int, int],
-                      "add": ["block", "point"],}
-        self.class_meths = {"Flatmap": ['add', 'close']}
+                      "Point": [int, int, int]}
+        self.class_meths = {"Flatmap": {
+                                'add': ['block', 'Point'], 
+                                'close': []
+                                }
+                            }
         self.flistsymbol = {"close" : "MAP"}
         self.blocks = {"COBBLE": 4, 
                        "AIR": 0, 
@@ -85,7 +88,12 @@ class Traverse(object):
             return str(self.blocks[tree.leaf])
         elif flag == "block":
             raise Exception("Not a valid block type")
+        elif tree.leaf == "true":
+            return "True"
+        elif tree.leaf == "false":
+            return "False"
         elif tree.leaf:
+            print str(tree.leaf)
             return str(tree.leaf)
         elif len(tree.children) == 1: # It is a point
             return self.dispatch(tree.children[0],flag)
@@ -394,7 +402,13 @@ class Traverse(object):
             self.leave()
             return s
         else: #for statement
-            return "for not implemented"
+            s = self.dispatch(tree.children[0],flag) + "\n" + "while " + self.dispatch(tree.children[1],flag)  + ":\n"
+            r = self.dispatch(tree.children[3],flag) + "\n" + self.dispatch(tree.children[2],flag)
+            # adding the indent yo
+            self.enter()
+            s += self.fill(r)
+            self.leave()
+            return s
 
     def _external_declaration(self,tree,flag=None):
         return self.dispatch(tree.children[0],flag)
@@ -412,7 +426,6 @@ class Traverse(object):
         typed_params = []
         for param in params:
             typed_params.append(self.get_param_type(param, tree))
-        print typed_params
         return typed_params
 
     def get_param_type(self, param, tree):
@@ -427,7 +440,8 @@ class Traverse(object):
                     return int
                 if tree.leaf in self.fargs:
                     params = self.dispatch(tree.children[0])
-                    print params
+                    print param
+                    print "hi " + params
                 return ret_val
 
     def _function_definition(self, tree, flag=None):
@@ -435,6 +449,7 @@ class Traverse(object):
         s = "def " + tree.leaf + "("
         if len(tree.children) == 2:
             params = self.dispatch(tree.children[0],flag)
+            print params
             # find out the necessary types for this new function
             self.fargs[fname] = self.get_param_types(params, tree.children[1])
             comma = False

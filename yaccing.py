@@ -261,6 +261,8 @@ def p_primary_expression(p):
     primary_expression : ID 
                        | STRING
                        | NUMBER
+                       | TRUE
+                       | FALSE
                        | point_gen
                        | LPAREN expression RPAREN
     '''
@@ -319,11 +321,15 @@ import hello.mt;
 
 def makeblocks(start,end, x) {
     x = new Flatmap("testfiles/testmap",500,500,500);
-    while (start < end)
-    {
+    while (true) {
         c = new Point(0,0,start);
         x.add(block(COBBLE), c);
         start = start + 1;
+    }
+    for (;start<end;start=start+1)
+    {
+        c = new Point(0,0,start);
+        x.add(block(COBBLE), c);
     }
 }
 
