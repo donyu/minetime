@@ -576,7 +576,7 @@ class Traverse(object):
         if len(tree.children) == 2: # if statement
             s = "if " + self.dispatch(tree.children[0],flag) + ":\n"
             self.enter()
-            r = self.dispatch(tree.children[1],flag)
+            r = self.dispatch(tree.children[1],flag) + "\npass"
             # adding the indent yo
             # print self.symbols
             s += self.fill(r)
@@ -591,7 +591,7 @@ class Traverse(object):
             self.leave()
             s+= "else:\n"
             self.enter()
-            t = self.dispatch(tree.children[2],flag)
+            t = self.dispatch(tree.children[2],flag) + "\npass"
             s += self.fill(t)
             self.leave()
             return s
@@ -602,6 +602,7 @@ class Traverse(object):
             # adding the indent yo
             self.enter()
             r = self.dispatch(tree.children[1],flag)
+            r = r + "\npass"
             s += self.fill(r)
             self.leave()
             return s
@@ -609,7 +610,7 @@ class Traverse(object):
             s = self.dispatch(tree.children[0],flag) + "\n" + "while " + self.dispatch(tree.children[1],flag)  + ":\n"
             # adding the indent yo
             self.enter()
-            r = self.dispatch(tree.children[3],flag) + "\n" + self.dispatch(tree.children[2],flag)
+            r = self.dispatch(tree.children[3],flag) + "\n" + self.dispatch(tree.children[2],flag) + "\npass"
             s += self.fill(r)
             self.leave()
             return s
@@ -667,7 +668,7 @@ class Traverse(object):
                 print (param, param_type)
                 self.symbols[param] = param_type
                 self.var_scopes[self.scope_depth].append(param)
-            print self.symbols
+            #print self.symbols
             comma = False
             for a in params:
                 if comma:
@@ -679,6 +680,7 @@ class Traverse(object):
             s = s + "):\n"
             #print self.waitingfor
             r = self.dispatch(tree.children[1],flag)
+            r += "\npass"
             s += self.fill(r)
             self.leave()
         else:
@@ -692,6 +694,8 @@ class Traverse(object):
                 s += a
                 self.waitingfor.add(a)
             s = s + "):"+"\n"
+            self.enter()
+            self.fill("pass")
         return s
 
     def _return_statement(self, tree, flag=None):
