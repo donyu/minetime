@@ -749,6 +749,8 @@ class Traverse(object):
             if s in self.symbols:
                 return self.symbols[s]
             else:
+                # Should not default to str actually. Doesn't exist should throw
+                # error and check for string separately
                 return str
 
     # def _parameter_list(self,tree, flag=None):
