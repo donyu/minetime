@@ -13,9 +13,9 @@ class Traverse(object):
                       "close": "saveInPlace"}
         # function argument types for type-checking
         self.fargs = {"Flatmap": [str, int, int, int],
-                      "Point": [int, int, int]}
-        self.class_meths = {"Flatmap": {
-                                'add': ['block', 'Point'], 
+                      "Point": [int, int, int],}
+        self.class_meths = {"MAP": {
+                                'add': ['block', 'POINT'], 
                                 'close': []
                                 }
                             }
@@ -190,7 +190,6 @@ class Traverse(object):
         self.tempPoints = set()
         # Type table for variables 
         self.symbols = {}
-        self.all_symbols = {}
         self.values = {}
         self.waitingfor = set()
         self._indent = 0
@@ -329,7 +328,6 @@ class Traverse(object):
             # add x to the scoping dict to be removed when out of scope
             self.var_scopes[self.scope_depth].append(tree.leaf)
             # all symbols seen (but may not be defined)
-            self.all_symbols[tree.leaf] = True
             if type(x) is tuple:
                 if x[0] == "Flatmap": 
                     self.symbols[tree.leaf] = "MAP" # add to symbol table
@@ -618,7 +616,12 @@ class Traverse(object):
     def get_param_type(self, param, tree):
         '''traverse tree until we find spot where param has to be certain type'''
         if tree.leaf == param:
-            return True
+            if tree.type == "class_method_expression":
+                for class_obj in self.class_meths:
+                    if tree.children[0].leaf in self.class_meths[class_obj]:
+                        return class_obj 
+            else:
+                return True
         for child in tree.children:
             ret_val = self.get_param_type(param, child)
             if ret_val:
@@ -626,8 +629,9 @@ class Traverse(object):
                     params = self.dispatch(tree.children[0])
                     return int
                 if tree.leaf in self.fargs:
+                    print "hello"
                     params = self.dispatch(tree.children[0])
-                    # print param
+                    print params
                     # print "hi " + params
                 return ret_val
 
@@ -635,10 +639,16 @@ class Traverse(object):
         fname = tree.leaf
         s = "def " + tree.leaf + "("
         if len(tree.children) == 2:
+            self.enter()
             params = self.dispatch(tree.children[0],flag)
-            # print params
+
             # find out the necessary types for this new function
             self.fargs[fname] = self.get_param_types(params, tree.children[1])
+            for (param, param_type) in zip(params, self.fargs[fname]):
+                print (param, param_type)
+                self.symbols[param] = param_type
+                self.var_scopes[self.scope_depth].append(param)
+            print self.symbols
             comma = False
             for a in params:
                 if comma:
@@ -649,7 +659,6 @@ class Traverse(object):
                 self.waitingfor.add(a)
             s = s + "):\n"
             #print self.waitingfor
-            self.enter()
             r = self.dispatch(tree.children[1],flag)
             s += self.fill(r)
             self.leave()

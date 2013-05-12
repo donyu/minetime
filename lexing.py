@@ -30,7 +30,7 @@ class Mtlex:
               'COMMENT',
               'ML_COMMENT',
               'COMMA',
-              'POINT',
+              # 'POINT',
               'DOTOPERATOR',
               'SEMICOLON',
               'COLON',
@@ -68,7 +68,7 @@ class Mtlex:
     t_COMMA = r','
     t_DOTOPERATOR = r'\.'
     NUMBER =  r'\d+'
-    t_POINT = t_LPAREN + NUMBER + t_COMMA + NUMBER + t_COMMA + NUMBER + t_RPAREN
+    # t_POINT = t_LPAREN + NUMBER + t_COMMA + NUMBER + t_COMMA + NUMBER + t_RPAREN
 
     # A regular expression rule with some action code
     def t_NUMBER(self,t):

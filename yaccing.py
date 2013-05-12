@@ -271,7 +271,6 @@ def p_primary_expression(p):
         p[0] = Node('primary_expression', [p[2]])
     else:
         p[0] = Node('primary_expression', [], p[1])
-    print dir(p)
 
 # def p_id_name(p):
 #     '''
@@ -323,11 +322,10 @@ def p_error(p):
         print "Syntax error around line number \n %d : %s " % (p.lineno, p.value)
 
 data_1 = '''
-def makeblocks(start,end, x) {
-    x = new Flatmap("testfiles/testmap",500,500,500);
+def makeblocks(start, end, x) {
     while (start < end) {
         c = new Point(0,0,start);
-        x.add(block(COBBLE), c);
+        x.add(block(COBBLESTONE), c);
         start = start + 1;
     }
     for (;start<end;start=start+1)
@@ -359,8 +357,7 @@ def main() {
     if (a > 1) {
         b = 2;
     }
-    b = 500;
-    x = new Flatmap("testfiles/testmap", b, 500, 500);
+    x = new Flatmap("testfiles/testmap", 500, 500, 500);
     c = new Point(0, 0, 0);
     x.add(block(STONE), c);
     x.close();
@@ -376,7 +373,7 @@ m.build()
 preprocessor = Processor()
 data_4 = preprocessor.preprocess(data_4)
 
-result1 = parser.parse(data_4, lexer=m.lexer)
+result1 = parser.parse(data_1, lexer=m.lexer)
 print result1
 
 firstline = '''
