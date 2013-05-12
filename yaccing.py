@@ -11,6 +11,9 @@ precedence = (
     ('left', 'TIMES', 'DIVIDE')
 )
 
+def getyacc():
+    return yacc.yacc()
+
 class Node(object):
 
     def __init__(self, type, children=None, leaf=None, token=None):
@@ -322,11 +325,10 @@ def p_error(p):
         print "Syntax error around line number \n %d : %s " % (p.lineno, p.value)
 
 data_1 = '''
-def makeblocks(start,end, x) {
-    x = new Flatmap("testfiles/testmap",500,500,500);
+def makeblocks(start, end, x) {
     while (start < end) {
         c = new Point(0,0,start);
-        x.add(block(COBBLE), c);
+        x.add(block(COBBLESTONE), c);
         start = start + 1;
     }
     for (;start<end;start=start+1)
@@ -358,8 +360,7 @@ def main() {
     if (a > 1) {
         b = 2;
     }
-    b = 500;
-    x = new Flatmap("testfiles/testmap", b, 500, 500);
+    x = new Flatmap("testfiles/testmap", 500, 500, 500);
     c = new Point(0, 0, 0);
     x.add(block(STONE), c);
     x.close();
@@ -389,4 +390,3 @@ m.build()
 #f = open("hello.py",'w')
 #f.write(code)
 #print code
-
