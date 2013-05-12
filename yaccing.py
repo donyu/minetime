@@ -68,8 +68,12 @@ def p_function_definition(p):
     else:
         p[0] = Node('function_definition', [p[4]], p[2])
 
-#def p_declaration_list(p):
-#    '''
+# def p_class_definition(p):
+#     '''
+#     class_definition : CLASS ID LPAREN ID RPAREN LCURL
+
+# #def p_declaration_list(p):
+# #    '''
 #    declaration_list : declaration
 #                     | declaration_list declaration
 #    '''
@@ -140,6 +144,7 @@ def p_assignment_expression(p):
     assignment_expression : ID ASSIGN NEW initializer
                           | ID ASSIGN assignment_expression
                           | logical_or_expression
+                          | function_expression
     '''
     if len(p) == 4:
         p[0] = Node('assignment_expression', [p[3]], p[1])
@@ -340,7 +345,7 @@ def makeblocks(start, end, x) {
 
 def main() {
 x = new Flatmap("testfiles/testmap",500,500,500);
-makeblocks(0,"hi", x);
+makeblocks(0,10, x);
 x.close();
 }
 '''
@@ -355,10 +360,13 @@ if (a> 1 ) { a = 1;}
 '''
 
 data_4 = '''
+def foo() {
+    return true;
+}
 def main() {
     a = 2;
-    if (a > 1) {
-        b = 2;
+    if (foo()) {
+        b = 3;
     }
     x = new Flatmap("testfiles/testmap", 500, 500, 500);
     c = new Point(0, 0, 0);
@@ -373,20 +381,20 @@ parser = yacc.yacc()
 m = Mtlex()
 m.build()
 # preprocessing step
-#preprocessor = Processor()
-#data_4 = preprocessor.preprocess(data_4)
+preprocessor = Processor()
+data_4 = preprocessor.preprocess(data_4)
+
+result1 = parser.parse(data_4, lexer=m.lexer)
+print result1
 #
-#result1 = parser.parse(data_4, lexer=m.lexer)
-#print result1
-#
-#firstline = '''
-#import logging
-#import os
-#import sys
-#from pymclevel import mclevel
-#from pymclevel.box import BoundingBox'''
-#t = Traverse(result1).getpython()
-#code = firstline + "\n" + t + "\n"
+firstline = '''
+import logging
+import os
+import sys
+from pymclevel import mclevel
+from pymclevel.box import BoundingBox'''
+t = Traverse(result1).getpython()
+code = firstline + "\n" + t + "\n"
 #f = open("hello.py",'w')
 #f.write(code)
-#print code
+print code
