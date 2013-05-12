@@ -294,6 +294,9 @@ class Traverse(object):
                     raise Exception(tree.leaf + " method called on a non " + self.flistsymbol[tree.leaf] + " type")
             return flag + "." + self.flist[tree.leaf] + "()"
         else:
+            if tree.leaf not in self.fargs:
+                raise Exception("Function %s is not user-defined nor is it part of the MineTime library"
+                    % (tree.leaf))
             if len(tree.children)==1:
                 params = self.dispatch(tree.children[0],flag)
                 if tree.leaf in self.fargs:
@@ -487,6 +490,9 @@ class Traverse(object):
                 x = self.flist[tree.leaf]
             else:  
                 x = tree.leaf
+                if x not in self.fargs:
+                    raise Exception("Initializer %s not defined in this language"
+                        % x)
             if tree.children:
                 params = self.dispatch(tree.children[0],flag)
                 # print params
@@ -576,7 +582,7 @@ class Traverse(object):
         if len(tree.children) == 2: # if statement
             s = "if " + self.dispatch(tree.children[0],flag) + ":\n"
             self.enter()
-            r = self.dispatch(tree.children[1],flag)
+            r = self.dispatch(tree.children[1],flag) + "\npass"
             # adding the indent yo
             # print self.symbols
             s += self.fill(r)
@@ -591,7 +597,7 @@ class Traverse(object):
             self.leave()
             s+= "else:\n"
             self.enter()
-            t = self.dispatch(tree.children[2],flag)
+            t = self.dispatch(tree.children[2],flag) + "\npass"
             s += self.fill(t)
             self.leave()
             return s
@@ -602,6 +608,7 @@ class Traverse(object):
             # adding the indent yo
             self.enter()
             r = self.dispatch(tree.children[1],flag)
+            r = r + "\npass"
             s += self.fill(r)
             self.leave()
             return s
@@ -609,7 +616,7 @@ class Traverse(object):
             s = self.dispatch(tree.children[0],flag) + "\n" + "while " + self.dispatch(tree.children[1],flag)  + ":\n"
             # adding the indent yo
             self.enter()
-            r = self.dispatch(tree.children[3],flag) + "\n" + self.dispatch(tree.children[2],flag)
+            r = self.dispatch(tree.children[3],flag) + "\n" + self.dispatch(tree.children[2],flag) + "\npass"
             s += self.fill(r)
             self.leave()
             return s
@@ -667,7 +674,7 @@ class Traverse(object):
                 print (param, param_type)
                 self.symbols[param] = param_type
                 self.var_scopes[self.scope_depth].append(param)
-            print self.symbols
+            #print self.symbols
             comma = False
             for a in params:
                 if comma:
@@ -679,6 +686,7 @@ class Traverse(object):
             s = s + "):\n"
             #print self.waitingfor
             r = self.dispatch(tree.children[1],flag)
+            r += "\npass"
             s += self.fill(r)
             self.leave()
         else:
@@ -692,6 +700,8 @@ class Traverse(object):
                 s += a
                 self.waitingfor.add(a)
             s = s + "):"+"\n"
+            self.enter()
+            self.fill("pass")
         return s
 
     def _return_statement(self, tree, flag=None):
