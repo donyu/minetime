@@ -294,6 +294,9 @@ class Traverse(object):
                     raise Exception(tree.leaf + " method called on a non " + self.flistsymbol[tree.leaf] + " type")
             return flag + "." + self.flist[tree.leaf] + "()"
         else:
+            if tree.leaf not in self.fargs:
+                raise Exception("Function %s is not user-defined nor is it part of the MineTime library"
+                    % (tree.leaf))
             if len(tree.children)==1:
                 params = self.dispatch(tree.children[0],flag)
                 if tree.leaf in self.fargs:
@@ -487,6 +490,9 @@ class Traverse(object):
                 x = self.flist[tree.leaf]
             else:  
                 x = tree.leaf
+                if x not in self.fargs:
+                    raise Exception("Initializer %s not defined in this language"
+                        % x)
             if tree.children:
                 params = self.dispatch(tree.children[0],flag)
                 # print params
