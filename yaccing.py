@@ -31,7 +31,7 @@ class Node(object):
     def traverse(self, i):
         s = self.type
         indent = "\n" + i*' |'
-        if self.leaf:
+        if self.leaf != None:
             if isinstance(self.leaf, Node):
                 print "Node"
                 s += indent + self.leaf.traverse(i+1)
@@ -373,20 +373,20 @@ parser = yacc.yacc()
 m = Mtlex()
 m.build()
 # preprocessing step
-preprocessor = Processor()
-data_4 = preprocessor.preprocess(data_4)
-
-result1 = parser.parse(data_1, lexer=m.lexer)
-print result1
-
-firstline = '''
-import logging
-import os
-import sys
-from pymclevel import mclevel
-from pymclevel.box import BoundingBox'''
-t = Traverse(result1).getpython()
-code = firstline + "\n" + t + "\n"
-f = open("hello.py",'w')
-f.write(code)
-print code
+#preprocessor = Processor()
+#data_4 = preprocessor.preprocess(data_4)
+#
+#result1 = parser.parse(data_4, lexer=m.lexer)
+#print result1
+#
+#firstline = '''
+#import logging
+#import os
+#import sys
+#from pymclevel import mclevel
+#from pymclevel.box import BoundingBox'''
+#t = Traverse(result1).getpython()
+#code = firstline + "\n" + t + "\n"
+#f = open("hello.py",'w')
+#f.write(code)
+#print code
