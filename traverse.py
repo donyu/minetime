@@ -189,6 +189,7 @@ class Traverse(object):
         self.tempPoints = set()
         # Type table for variables 
         self.symbols = {}
+        self.all_symbols = {}
         self.values = {}
         self.waitingfor = set()
         self._indent = 0
@@ -200,6 +201,7 @@ class Traverse(object):
         "Indent a piece of text, according to the current indentation level"
         s = ""
         buf = StringIO.StringIO(text)
+        print "indenting ", self._indent
         for line in buf:
             s+= "    "*self._indent + line 
         return s
@@ -224,6 +226,7 @@ class Traverse(object):
         "Print ':', and increase the indentation and create a new scope"
         # initialize depth
         self.scope_depth += 1
+        print "depth ", self._indent
         self.var_scopes.append([])
         self._indent += 1
         return ":"
@@ -238,6 +241,7 @@ class Traverse(object):
         del self.var_scopes[self.scope_depth]
         self.scope_depth -= 1
         self._indent -= 1
+        print "leaving ", self._indent
 
     # calls the function corresponding to the name of the node of the tree. Call on a single node and not a list
     def dispatch(self, tree, flag=None): 
@@ -312,6 +316,7 @@ class Traverse(object):
         return self.dispatch(tree.children[0],flag)
 
     def _assignment_expression(self, tree,flag=None):
+        print "assignmnet ", tree.leaf
         x = self.dispatch(tree.children[0],flag) # x has name, y has params
         #print x
         if not tree.leaf:
@@ -319,6 +324,8 @@ class Traverse(object):
         else:
             # add x to the scoping dict to be removed when out of scope
             self.var_scopes[self.scope_depth].append(tree.leaf)
+            # all symbols seen (but may not be defined)
+            self.all_symbols[tree.leaf] = True
             if type(x) is tuple:
                 if x[0] == "Flatmap": 
                     self.symbols[tree.leaf] = "MAP" # add to symbol table
@@ -387,6 +394,7 @@ class Traverse(object):
         return self.dispatch(tree.children[0],flag)
 
     def flatmap_method(self, name, param):
+        print "hello" + param[3]
         if self.getint(param[1]) and self.getint(param[2]) and self.getint(param[3]):
             sizex = self.getint(param[1])
             sizey = self.getint(param[2])
@@ -467,14 +475,24 @@ class Traverse(object):
                 # initializer argument type checking
                 if tree.leaf in self.fargs:
                     typed_params = [self.num_or_str(param) for param in params]
-                    init_args = [type(param) for param in typed_params]
+                    init_args = [self.get_type(param) for param in typed_params]
                     if init_args != self.fargs[tree.leaf]:
-                        print "Initializer Type Check Error for", tree.leaf
+                        raise Exception("Initializer Type Check Error for %s, excepted %s but got %s" 
+                            % (tree.leaf, str(self.fargs[tree.leaf]), str(init_args)))
                 return (x, params)
             else:
                 return x
         else:
             return self.dispatch(tree.children[0],flag)
+
+    def get_type(self, param):
+        """given a symbol variable or primary expression, will return its type"""
+        if param in self.all_symbols:
+            if param in self.symbols:
+                return self.symbols[param]
+            else:
+                raise Exception("Variable %s never initialized within this scope" % param)
+        return type(param)
 
     def _parameter_list(self, tree, flag=None): # HAVE TO HANDLE FUNCTION PARAMETERS
         if len(tree.children) == 0:
@@ -536,23 +554,26 @@ class Traverse(object):
         return tree.leaf
 
     def _selection_statement(self,tree,flag=None):
+        # print "selection"
         if len(tree.children) == 2: # if statement
             s = "if " + self.dispatch(tree.children[0],flag) + ":\n"
+            self.enter()
             r = self.dispatch(tree.children[1],flag)
             # adding the indent yo
-            self.enter()
+            print self.symbols
             s += self.fill(r)
             self.leave()
+            print self.symbols
             return s
         else:
             s = "if " + self.dispatch(tree.children[0],flag) + ":\n"
-            r = self.dispatch(tree.children[1],flag)
             self.enter()
+            r = self.dispatch(tree.children[1],flag)
             s += self.fill(r + "\n")
             self.leave()
             s+= "else:\n"
-            t = self.dispatch(tree.children[2],flag)
             self.enter()
+            t = self.dispatch(tree.children[2],flag)
             s += self.fill(t)
             self.leave()
             return s
@@ -560,17 +581,17 @@ class Traverse(object):
     def _iteration_statement(self,tree,flag=None):
         if len(tree.children) == 2: # while statement
             s = "while " + self.dispatch(tree.children[0],flag) + ":\n"
-            r = self.dispatch(tree.children[1],flag)
             # adding the indent yo
             self.enter()
+            r = self.dispatch(tree.children[1],flag)
             s += self.fill(r)
             self.leave()
             return s
         else: #for statement
             s = self.dispatch(tree.children[0],flag) + "\n" + "while " + self.dispatch(tree.children[1],flag)  + ":\n"
-            r = self.dispatch(tree.children[3],flag) + "\n" + self.dispatch(tree.children[2],flag)
             # adding the indent yo
             self.enter()
+            r = self.dispatch(tree.children[3],flag) + "\n" + self.dispatch(tree.children[2],flag)
             s += self.fill(r)
             self.leave()
             return s
@@ -610,11 +631,6 @@ class Traverse(object):
                 return ret_val
 
     def _function_definition(self, tree, flag=None):
-        # initialize depth
-        self.scope_depth += 1
-        self.var_scopes.append([])
-
-        # dispatch tree now
         fname = tree.leaf
         s = "def " + tree.leaf + "("
         if len(tree.children) == 2:
@@ -632,8 +648,8 @@ class Traverse(object):
                 self.waitingfor.add(a)
             s = s + "):\n"
             #print self.waitingfor
-            r = self.dispatch(tree.children[1],flag)
             self.enter()
+            r = self.dispatch(tree.children[1],flag)
             s += self.fill(r)
             self.leave()
         else:
