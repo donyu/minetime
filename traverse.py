@@ -203,7 +203,10 @@ class Traverse(object):
         buf = StringIO.StringIO(text)
         print "indenting ", self._indent
         for line in buf:
-            s+= "    "*self._indent + line 
+            if self._indent:
+                s += "    " + line 
+            else:
+                s += line
         return s
 
     def getpython(self):
@@ -226,7 +229,7 @@ class Traverse(object):
         "Print ':', and increase the indentation and create a new scope"
         # initialize depth
         self.scope_depth += 1
-        print "depth ", self._indent
+        # print "depth ", self._indent
         self.var_scopes.append([])
         self._indent += 1
         return ":"
@@ -241,7 +244,7 @@ class Traverse(object):
         del self.var_scopes[self.scope_depth]
         self.scope_depth -= 1
         self._indent -= 1
-        print "leaving ", self._indent
+        # print "leaving ", self._indent
 
     # calls the function corresponding to the name of the node of the tree. Call on a single node and not a list
     def dispatch(self, tree, flag=None): 
@@ -264,7 +267,7 @@ class Traverse(object):
         elif tree.leaf == "false":
             return "False"
         elif tree.leaf:
-            print str(tree.leaf)
+            # print str(tree.leaf)
             return str(tree.leaf)
         elif len(tree.children) == 1: # It is a point
             return self.dispatch(tree.children[0],flag)
@@ -287,9 +290,9 @@ class Traverse(object):
         else:
             if len(tree.children)==1:
                 params = self.dispatch(tree.children[0],flag)
-                print params, " hi"
+                # print params, " hi"
                 s = self.listtoparams(params)
-                print s
+                # print s
             else:
                 s = ""
             return tree.leaf + "(" + s + ")"
@@ -302,7 +305,7 @@ class Traverse(object):
         x = self.dispatch(tree.children[0],flag) # x[0] has block with number, x[1] has point
         if len(x) != 2:
             raise Exception("Wrong number of parameters given to add method")
-        print "It is:",x[1]
+        # print "It is:",x[1]
         if not self.symbols.get(x[1]) == "POINT" and not x[1] in self.tempPoints:
             raise Exception("Not a valid point")
         if x[1] in self.tempPoints:
@@ -316,7 +319,7 @@ class Traverse(object):
         return self.dispatch(tree.children[0],flag)
 
     def _assignment_expression(self, tree,flag=None):
-        print "assignmnet ", tree.leaf
+        # print "assignmnet ", tree.leaf
         x = self.dispatch(tree.children[0],flag) # x has name, y has params
         #print x
         if not tree.leaf:
@@ -394,7 +397,7 @@ class Traverse(object):
         return self.dispatch(tree.children[0],flag)
 
     def flatmap_method(self, name, param):
-        print "hello" + param[3]
+        # print "hello" + param[3]
         if self.getint(param[1]) and self.getint(param[2]) and self.getint(param[3]):
             sizex = self.getint(param[1])
             sizey = self.getint(param[2])
@@ -471,7 +474,7 @@ class Traverse(object):
                 x = tree.leaf
             if tree.children:
                 params = self.dispatch(tree.children[0],flag)
-                print params
+                # print params
                 # initializer argument type checking
                 if tree.leaf in self.fargs:
                     typed_params = [self.num_or_str(param) for param in params]
@@ -560,10 +563,10 @@ class Traverse(object):
             self.enter()
             r = self.dispatch(tree.children[1],flag)
             # adding the indent yo
-            print self.symbols
+            # print self.symbols
             s += self.fill(r)
             self.leave()
-            print self.symbols
+            # print self.symbols
             return s
         else:
             s = "if " + self.dispatch(tree.children[0],flag) + ":\n"
@@ -626,8 +629,8 @@ class Traverse(object):
                     return int
                 if tree.leaf in self.fargs:
                     params = self.dispatch(tree.children[0])
-                    print param
-                    print "hi " + params
+                    # print param
+                    # print "hi " + params
                 return ret_val
 
     def _function_definition(self, tree, flag=None):
@@ -635,7 +638,7 @@ class Traverse(object):
         s = "def " + tree.leaf + "("
         if len(tree.children) == 2:
             params = self.dispatch(tree.children[0],flag)
-            print params
+            # print params
             # find out the necessary types for this new function
             self.fargs[fname] = self.get_param_types(params, tree.children[1])
             comma = False

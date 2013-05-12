@@ -314,14 +314,12 @@ def p_error(p):
     if p == None:
         print "Syntax error at last token."
     else:
-        print "Syntax error around line number {0}".format(p.lineno)
+        print "Syntax error around line number \n %d : %s " % (p.lineno, p.value)
 
 data_1 = '''
-import hello.mt;
-
 def makeblocks(start,end, x) {
     x = new Flatmap("testfiles/testmap",500,500,500);
-    while (true) {
+    while (start < end) {
         c = new Point(0,0,start);
         x.add(block(COBBLE), c);
         start = start + 1;
@@ -351,7 +349,12 @@ if (a> 1 ) { a = 1;}
 
 data_4 = '''
 def main() {
-    x = new Flatmap("testfiles/testmap", 500, 500,500);
+    a = 2;
+    if (a > 1) {
+        b = 2;
+    }
+    b = 3;
+    x = new Flatmap("testfiles/testmap", b, 500, 500);
     x.close();
 }
 '''
@@ -363,20 +366,19 @@ m = Mtlex()
 m.build()
 # preprocessing step
 preprocessor = Processor()
-data_1 = preprocessor.preprocess(data_1)
-print data_1
+data_4 = preprocessor.preprocess(data_4)
 
-# result1 = parser.parse(data_1, lexer=m.lexer)
-# print result1
+result1 = parser.parse(data_4, lexer=m.lexer)
+print result1
 
-# firstline = '''
-# import logging
-# import os
-# import sys
-# from pymclevel import mclevel
-# from pymclevel.box import BoundingBox'''
-# t = Traverse(result1).getpython()
-# code = firstline + "\n" + t + "\n"
-# # f = open("hello.py",'w')
-# # f.write(code)
-# print code
+firstline = '''
+import logging
+import os
+import sys
+from pymclevel import mclevel
+from pymclevel.box import BoundingBox'''
+t = Traverse(result1).getpython()
+code = firstline + "\n" + t + "\n"
+f = open("hello.py",'w')
+f.write(code)
+print code
