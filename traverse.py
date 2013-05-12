@@ -354,10 +354,11 @@ class Traverse(object):
                 if x in self.tempPoints:
                     self.symbols[tree.leaf] = "POINT"
                     self.tempPoints.remove(x)
-                elif self.isNum(x): # int or string
+                elif self.isNum(x) or x == '0': # int or string
                     self.symbol_add_helper(tree.leaf, int, self.isNum(x))
                 else:
                     print tree.leaf
+                    print x
                     self.symbol_add_helper(tree.leaf, str)
                 return tree.leaf + "=" + x
 
