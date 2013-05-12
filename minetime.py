@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import yaccing as yacc
 import sys
 from lexing import Mtlex
