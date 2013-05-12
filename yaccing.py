@@ -13,14 +13,14 @@ precedence = (
 
 class Node(object):
 
-    def __init__(self, type, children=None, leaf=None, code=None):
+    def __init__(self, type, children=None, leaf=None, token=None):
          self.type = type
          if children:
               self.children = children
          else:
               self.children = [ ]
          self.leaf = leaf
-         self.code = code
+         self.token = token
 
     def __str__(self):
         return self.traverse(1)
@@ -258,12 +258,11 @@ def p_parameter_declaration(p):
 
 def p_primary_expression(p):
     '''
-    primary_expression : ID 
+    primary_expression : ID
                        | STRING
                        | NUMBER
                        | TRUE
                        | FALSE
-                       | point_gen
                        | LPAREN expression RPAREN
     '''
     if not isinstance(p[1], basestring) and not isinstance(p[1],int):
@@ -272,12 +271,19 @@ def p_primary_expression(p):
         p[0] = Node('primary_expression', [p[2]])
     else:
         p[0] = Node('primary_expression', [], p[1])
+    print dir(p)
 
-def p_point_gen(p):
-    '''
-    point_gen : POINT
-    '''
-    p[0] = Node('point_gen',[], p[1])
+# def p_id_name(p):
+#     '''
+#     id_name : ID
+#     '''
+#     p[0] = Node('id_name',[], p[1])
+
+# def p_point_gen(p):
+#     '''
+#     point_gen : POINT
+#     '''
+#     p[0] = Node('point_gen',[], p[1])
 
 def p_iteration_statement(p):
     '''
@@ -353,8 +359,10 @@ def main() {
     if (a > 1) {
         b = 2;
     }
-    b = 3;
+    b = 500;
     x = new Flatmap("testfiles/testmap", b, 500, 500);
+    c = new Point(0, 0, 0);
+    x.add(block(STONE), c);
     x.close();
 }
 '''
