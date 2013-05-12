@@ -11,6 +11,9 @@ precedence = (
     ('left', 'TIMES', 'DIVIDE')
 )
 
+def getyacc():
+    return yacc.yacc()
+
 class Node(object):
 
     def __init__(self, type, children=None, leaf=None, token=None):
