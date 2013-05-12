@@ -10,7 +10,9 @@ class Mtlex:
                 'for' : 'FOR',
                 'while' : 'WHILE',
                 'return' : 'RETURN',
-                'new' : 'NEW'
+                'new' : 'NEW',
+                'true' : 'TRUE',
+                'false' : 'FALSE'
                 }
 
     tokens = ['NUMBER',
@@ -26,6 +28,7 @@ class Mtlex:
               'RCURL',
               'STRING',
               'COMMENT',
+              'ML_COMMENT',
               'COMMA',
               'POINT',
               'DOTOPERATOR',
@@ -52,7 +55,7 @@ class Mtlex:
     t_COLON = r':'
     t_LCURL = r'{'
     t_RCURL = r'}'
-    t_STRING = r'".*"'
+    t_STRING = r'"(\\.|[^"])*"'
     t_G_OP = r'>'
     t_L_OP = r'<'
     t_GE_OP = r'>='
@@ -62,7 +65,6 @@ class Mtlex:
     t_EQ = r'=='
     t_NEQ = r'!='
    # t_COMMMENT = r'/\*.*\*/'
-    t_COMMENT = r'\#(.*)(\n)?'
     t_COMMA = r','
     t_DOTOPERATOR = r'\.'
     NUMBER =  r'\d+'
@@ -86,8 +88,13 @@ class Mtlex:
         r'\n+'
         t.lexer.lineno += len(t.value)
 
+    # Skips over comment tokens
+    t_ignore_COMMENT = r'\$(.*)(\n)?'
+
+    t_ignore_ML_COMMENT = r'\$\*[^\$\*]*\*\$'
+
     # A string containing ignored characters (spaces and tabs)
-    t_ignore  = ' \t'
+    t_ignore  = ' \t' 
 
     # Error handling rule
     def t_error(self,t):

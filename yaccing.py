@@ -2,6 +2,7 @@ import ply.yacc as yacc
 import sys
 from lexing import Mtlex
 from traverse import *
+from preprocess import *
 
 tokens = Mtlex.tokens
 
@@ -12,14 +13,14 @@ precedence = (
 
 class Node(object):
 
-    def __init__(self, type, children=None, leaf=None, code=None):
+    def __init__(self, type, children=None, leaf=None, token=None):
          self.type = type
          if children:
               self.children = children
          else:
               self.children = [ ]
          self.leaf = leaf
-         self.code = code
+         self.token = token
 
     def __str__(self):
         return self.traverse(1)
@@ -29,6 +30,7 @@ class Node(object):
         indent = "\n" + i*' |'
         if self.leaf:
             if isinstance(self.leaf, Node):
+                print "Node"
                 s += indent + self.leaf.traverse(i+1)
             else:
                 s += indent + str(self.leaf)
@@ -42,20 +44,20 @@ def p_translation_unit(p):
                      | translation_unit external_declaration
     '''
     if len(p) == 2:
-        p[0] = Node('external_declaration', [p[1]])
+        p[0] = Node('translation_unit', [p[1]])
     else:
-        p[0] = Node('external_declaration', [p[1], p[2]])
+        p[0] = Node('translation_unit', [p[1], p[2]])
 
 def p_external_declaration(p):
     '''
     external_declaration : function_definition
-                         | declaration
+                         | statement
     '''
     p[0] = Node('external_declaration', [p[1]])
 
 def p_function_definition(p):
     '''
-    function_definition : DEF ID LPAREN parameter_list RPAREN LCURL declaration_list RCURL
+    function_definition : DEF ID LPAREN parameter_list RPAREN LCURL statement_list RCURL
                         | DEF ID LPAREN parameter_list RPAREN LCURL RCURL
     '''
     if len(p) == 9:
@@ -63,22 +65,22 @@ def p_function_definition(p):
     else:
         p[0] = Node('function_definition', [p[4]], p[2])
 
-def p_declaration_list(p):
-    '''
-    declaration_list : declaration
-                     | declaration_list declaration
-    '''
-
-    if len(p) == 2:
-        p[0] = Node('declaration_list', [p[1]])
-    else:
-        p[0] = Node('declaration_list', [p[1], p[2]])
-
-def p_declaration(p):
-    '''
-    declaration : statement
-    '''
-    p[0] = Node('declaration', [p[1]])
+#def p_declaration_list(p):
+#    '''
+#    declaration_list : declaration
+#                     | declaration_list declaration
+#    '''
+#
+#    if len(p) == 2:
+#        p[0] = Node('declaration_list', [p[1]])
+#    else:
+#        p[0] = Node('declaration_list', [p[1], p[2]])
+#
+#def p_declaration(p):
+#    '''
+#    declaration : statement
+#    '''
+#    p[0] = Node('declaration', [p[1]])
 
 def p_statement(p):
     '''
@@ -87,6 +89,7 @@ def p_statement(p):
               | iteration_statement
               | selection_statement
               | class_method_expression
+              | function_expression
               | return_statement
     '''
     p[0] = Node('statement', [p[1]]) 
@@ -255,10 +258,11 @@ def p_parameter_declaration(p):
 
 def p_primary_expression(p):
     '''
-    primary_expression : ID 
+    primary_expression : ID
                        | STRING
                        | NUMBER
-                       | point_gen
+                       | TRUE
+                       | FALSE
                        | LPAREN expression RPAREN
     '''
     if not isinstance(p[1], basestring) and not isinstance(p[1],int):
@@ -267,13 +271,19 @@ def p_primary_expression(p):
         p[0] = Node('primary_expression', [p[2]])
     else:
         p[0] = Node('primary_expression', [], p[1])
+    print dir(p)
 
+# def p_id_name(p):
+#     '''
+#     id_name : ID
+#     '''
+#     p[0] = Node('id_name',[], p[1])
 
-def p_point_gen(p):
-    '''
-    point_gen : POINT
-    '''
-    p[0] = Node('point_gen',[], p[1])
+# def p_point_gen(p):
+#     '''
+#     point_gen : POINT
+#     '''
+#     p[0] = Node('point_gen',[], p[1])
 
 def p_iteration_statement(p):
     '''
@@ -307,26 +317,29 @@ def p_return_statement(p):
 
 def p_error(p):
     # we should throw compiler error in this case
-    print 'there is no grammar for this'
-
+    if p == None:
+        print "Syntax error at last token."
+    else:
+        print "Syntax error around line number \n %d : %s " % (p.lineno, p.value)
 
 data_1 = '''
-def main(){
-x = Flatmap("testfiles/testmap",500,500,500);
-a = 10;
-b = Point(a,a,a);
-if (i*5<=30 && x!=5)
-{
-    x.add(block(COBBLE), b); 
+def makeblocks(start,end, x) {
+    x = new Flatmap("testfiles/testmap",500,500,500);
+    while (start < end) {
+        c = new Point(0,0,start);
+        x.add(block(COBBLE), c);
+        start = start + 1;
+    }
+    for (;start<end;start=start+1)
+    {
+        c = new Point(0,0,start);
+        x.add(block(COBBLE), c);
+    }
 }
-else {
-   i = 3;
-}
-while (i*5<=30 && x!=5) 
-{
-    i=3333;
-}
-x.add(block(COBBLE), b);
+
+def main() {
+x = new Flatmap("testfiles/testmap",500,500,500);
+makeblocks(0,"hi", x);
 x.close();
 }
 '''
@@ -340,21 +353,40 @@ a = 2
 if (a> 1 ) { a = 1;}
 '''
 
+data_4 = '''
+def main() {
+    a = 2;
+    if (a > 1) {
+        b = 2;
+    }
+    b = 500;
+    x = new Flatmap("testfiles/testmap", b, 500, 500);
+    c = new Point(0, 0, 0);
+    x.add(block(STONE), c);
+    x.close();
+}
+'''
+
+# generate the parser
 parser = yacc.yacc()
+# generate the lexer to be used with parser
 m = Mtlex()
 m.build()
+# preprocessing step
+preprocessor = Processor()
+data_4 = preprocessor.preprocess(data_4)
 
-#result1 = parser.parse(data_1, lexer=m.lexer)
-#print result1
-#
-#firstline = '''
-#import logging
-#import os
-#import sys
-#from pymclevel import mclevel
-#from pymclevel.box import BoundingBox'''
-#t = Traverse(result1).getpython()
-#code = firstline + "\n" + t + "\n"
-##f = open("hello.py",'w')
-##f.write(code)
-#print code
+result1 = parser.parse(data_4, lexer=m.lexer)
+print result1
+
+firstline = '''
+import logging
+import os
+import sys
+from pymclevel import mclevel
+from pymclevel.box import BoundingBox'''
+t = Traverse(result1).getpython()
+code = firstline + "\n" + t + "\n"
+f = open("hello.py",'w')
+f.write(code)
+print code
