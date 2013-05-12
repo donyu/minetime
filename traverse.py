@@ -360,6 +360,7 @@ class Traverse(object):
                     print tree.leaf
                     print x
                     self.symbol_add_helper(tree.leaf, str)
+                print self.symbols
                 return tree.leaf + "=" + x
 
     def symbol_add_helper(self, var, type, value=None):
@@ -716,11 +717,34 @@ class Traverse(object):
 
     def isNum(self, s):
         """Convert string to either int or float."""
+        #print s
+        #print self.is_same_type(s)
         try:
             ret = int(s)
         except ValueError:
             return False
         return ret
+    
+    def is_same_type(self, s):
+        esc_relops = map(re.escape, self.relops)
+        delimit = r'|'.join(esc_relops)
+        tokens = re.split(delimit, s)
+
+        typ = self.get_type(tokens[0])
+        for t in tokens:
+            if self.get_type(t) != typ:
+                return False
+        return True
+
+    def get_type(self, s):
+        try:
+            int(s)
+            return int
+        except ValueError:
+            if s in self.symbols:
+                return self.symbols[s]
+            else:
+                return str
 
     # def _parameter_list(self,tree, flag=None):
     #     if tree.children == 0:
