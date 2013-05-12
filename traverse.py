@@ -13,7 +13,7 @@ class Traverse(object):
                       "close": "saveInPlace"}
         # function argument types for type-checking
         self.fargs = {"Flatmap": [str, int, int, int],
-                      "Point": [int, int, int],}
+                      "Point": [int, int, int]}
         self.class_meths = {"MAP": {
                                 'add': ['block', 'POINT'], 
                                 'close': []
@@ -239,8 +239,14 @@ class Traverse(object):
         # remove symbols from this scope and then return s
         for var in self.var_scopes[self.scope_depth]:
             del self.symbols[var]
+            if (var + str(self.scope_depth)) in self.symbols:
+                self.symbols[var] = self.symbols[var + str(self.scope_depth)]
+                del self.symbols[var + str(self.scope_depth)]
             if var in self.values:
                 del self.values[var]
+                if (var + str(self.scope_depth)) in self.values:
+                    self.values[var] = self.values[var + str(self.scope_depth)]
+                    del self.values[var + str(self.scope_depth)]
         del self.var_scopes[self.scope_depth]
         self.scope_depth -= 1
         self._indent -= 1
@@ -290,7 +296,12 @@ class Traverse(object):
         else:
             if len(tree.children)==1:
                 params = self.dispatch(tree.children[0],flag)
-                # print params, " hi"
+                if tree.leaf in self.fargs:
+                    typed_params = [self.num_or_str(param) for param in params]
+                    init_args = [self.get_type(param) for param in typed_params]
+                    if init_args != self.fargs[tree.leaf]:
+                        raise Exception("Function Type Check Error for %s, excepted %s but got %s" 
+                            % (tree.leaf, str(self.fargs[tree.leaf]), str(init_args)))
                 s = self.listtoparams(params)
                 # print s
             else:
@@ -330,21 +341,29 @@ class Traverse(object):
             # all symbols seen (but may not be defined)
             if type(x) is tuple:
                 if x[0] == "Flatmap": 
-                    self.symbols[tree.leaf] = "MAP" # add to symbol table
+                    self.symbol_add_helper(tree.leaf, "MAP")
                     return self.flatmap_method(tree.leaf, x[1])
                 elif x[0] == "Point":
-                    self.symbols[tree.leaf] = "POINT"
+                    self.symbol_add_helper(tree.leaf, "POINT")
                     return self.point_method(tree.leaf, x[1])
             else: # assigning a point right now
                 if x in self.tempPoints:
                     self.symbols[tree.leaf] = "POINT"
                     self.tempPoints.remove(x)
                 elif self.isNum(x): # int or string
-                    self.symbols[tree.leaf] = int
-                    self.values[tree.leaf] = self.isNum(x)
+                    self.symbol_add_helper(tree.leaf, int, self.isNum(x))
                 else:
-                    self.symbols[tree.leaf] = str
+                    self.symbol_add_helper(tree.leaf, str)
                 return tree.leaf + "=" + x
+
+    def symbol_add_helper(self, var, type, value=None):
+        if var in self.symbols:
+            self.symbols[var + str(self.scope_depth)] = self.symbols[var]
+            if value:
+                self.values[var + str(self.scope_depth)] = self.values[var]
+        self.symbols[var] = type
+        if value:
+            self.values[var] = value
 
     def listtoparams(self,l,x=None):
         s = ""

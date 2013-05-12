@@ -334,7 +334,7 @@ def makeblocks(start, end, x) {
     for (;start<end;start=start+1)
     {
         c = new Point(0,0,start);
-        x.add(block(COBBLE), c);
+        x.add(block(COBBLESTONE), c);
     }
 }
 
