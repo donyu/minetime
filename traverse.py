@@ -302,8 +302,9 @@ class Traverse(object):
                 if tree.leaf in self.fargs:
                     typed_params = [self.num_or_str(param) for param in params]
                     init_args = [self.get_type(param) for param in typed_params]
+                    print tree.leaf, init_args, params, self.symbols
                     if init_args != self.fargs[tree.leaf]:
-                        raise Exception("Function Type Check Error for %s, excepted %s but got %s" 
+                        raise Exception("Function Type Check Error for %s, expected %s but got %s" 
                             % (tree.leaf, str(self.fargs[tree.leaf]), str(init_args)))
                 s = self.listtoparams(params)
                 # print s
@@ -356,13 +357,14 @@ class Traverse(object):
                 elif self.isNum(x): # int or string
                     self.symbol_add_helper(tree.leaf, int, self.isNum(x))
                 else:
+                    print tree.leaf
                     self.symbol_add_helper(tree.leaf, str)
                 return tree.leaf + "=" + x
 
     def symbol_add_helper(self, var, type, value=None):
         if var in self.symbols:
             self.symbols[var + str(self.scope_depth)] = self.symbols[var]
-            if value:
+            if value and var in self.values:
                 self.values[var + str(self.scope_depth)] = self.values[var]
         self.symbols[var] = type
         if value:
@@ -454,7 +456,8 @@ class Traverse(object):
         try:
             ret = int(s)
         except ValueError:
-            return self.symbols.get(s) == "INT" or s in self.waitingfor 
+            if s in self.values:
+                return self.values[s]
         return True
 
     def getint(self,s):

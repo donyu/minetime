@@ -13,10 +13,10 @@ def even(x) {
 
 def main() {
 
-map = FlatMap("xmap", 300, 300, 100);
+map = new Flatmap("xmap", 300, 300, 100);
 
-for (x=0; x < 300; x = x+1) {
-    for (y=0; y < 300; y = y+1) {
+for (x=1; x < 300; x = x+1) {
+    for (y=1; y < 300; y = y+1) {
         if ( even(x) ) { 
             p = new Point(x,y,0);
             map.add(block(COBBLESTONE), p);
@@ -28,7 +28,7 @@ for (x=0; x < 300; x = x+1) {
     }
 }  
 
-for (x=0; x < 300; x = x+1) {
+for (x=1; x < 300; x = x+1) {
     for (y=300; y > 0; y = y-1) {
         if ( even(x) ) { 
             p = new Point(x,y,0);
