@@ -237,6 +237,7 @@ class Traverse(object):
     def leave(self):
         "Decrease the indentation level and remove out-of-scope symbols"
         # remove symbols from this scope and then return s
+        print self.symbols
         for var in self.var_scopes[self.scope_depth]:
             del self.symbols[var]
             if (var + str(self.scope_depth)) in self.symbols:
@@ -354,21 +355,24 @@ class Traverse(object):
                 if x in self.tempPoints:
                     self.symbols[tree.leaf] = "POINT"
                     self.tempPoints.remove(x)
-                elif self.isNum(x) or x == '0': # int or string
+                elif self.isNum(x) or x == '0': # int
                     self.symbol_add_helper(tree.leaf, int, self.isNum(x))
                 else:
-                    print tree.leaf
-                    print x
-                    self.symbol_add_helper(tree.leaf, str)
+                    # check if we need to do type conversion
+                    relopslist = ['+', '-', '/', '*']
+                    if [e for e in relopslist if e in x]:
+                        self.symbol_add_helper(tree.leaf, self.get_inference_type(x))
+                    else:
+                        self.symbol_add_helper(tree.leaf, float)
                 print self.symbols
                 return tree.leaf + "=" + x
 
-    def symbol_add_helper(self, var, type, value=None):
+    def symbol_add_helper(self, var, type_val, value=None):
         if var in self.symbols:
             self.symbols[var + str(self.scope_depth)] = self.symbols[var]
             if value and var in self.values:
                 self.values[var + str(self.scope_depth)] = self.values[var]
-        self.symbols[var] = type
+        self.symbols[var] = type_val
         if value:
             self.values[var] = value
 
@@ -725,18 +729,19 @@ class Traverse(object):
             return False
         return ret
     
-    def is_same_type(self, s):
+    def get_inference_type(self, s):
         esc_relops = map(re.escape, self.relops)
         delimit = r'|'.join(esc_relops)
         tokens = re.split(delimit, s)
 
-        typ = self.get_type(tokens[0])
+        typ = self.get_type_t(tokens[0])
         for t in tokens:
-            if self.get_type(t) != typ:
-                return False
-        return True
+            if self.get_type_t(t) != typ:
+                raise Exception('Type Conversion Error between %s and %s'
+                    % (t, typ))
+        return typ
 
-    def get_type(self, s):
+    def get_type_t(self, s):
         try:
             int(s)
             return int
