@@ -28,7 +28,7 @@ class Node(object):
     def traverse(self, i):
         s = self.type
         indent = "\n" + i*' |'
-        if self.leaf:
+        if self.leaf != None:
             if isinstance(self.leaf, Node):
                 print "Node"
                 s += indent + self.leaf.traverse(i+1)
@@ -271,7 +271,6 @@ def p_primary_expression(p):
         p[0] = Node('primary_expression', [p[2]])
     else:
         p[0] = Node('primary_expression', [], p[1])
-    print dir(p)
 
 # def p_id_name(p):
 #     '''
@@ -373,20 +372,21 @@ parser = yacc.yacc()
 m = Mtlex()
 m.build()
 # preprocessing step
-preprocessor = Processor()
-data_4 = preprocessor.preprocess(data_4)
+#preprocessor = Processor()
+#data_4 = preprocessor.preprocess(data_4)
+#
+#result1 = parser.parse(data_4, lexer=m.lexer)
+#print result1
+#
+#firstline = '''
+#import logging
+#import os
+#import sys
+#from pymclevel import mclevel
+#from pymclevel.box import BoundingBox'''
+#t = Traverse(result1).getpython()
+#code = firstline + "\n" + t + "\n"
+#f = open("hello.py",'w')
+#f.write(code)
+#print code
 
-result1 = parser.parse(data_4, lexer=m.lexer)
-print result1
-
-firstline = '''
-import logging
-import os
-import sys
-from pymclevel import mclevel
-from pymclevel.box import BoundingBox'''
-t = Traverse(result1).getpython()
-code = firstline + "\n" + t + "\n"
-f = open("hello.py",'w')
-f.write(code)
-print code
