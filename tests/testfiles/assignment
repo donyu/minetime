@@ -1,0 +1,46 @@
+translation_unit
+ |external_declaration
+ | |function_definition
+ | | |main
+ | | |parameter_list
+ | | |statement_list
+ | | | |statement_list
+ | | | | |statement
+ | | | | | |expression_statement
+ | | | | | | |expression
+ | | | | | | | |assignment_expression
+ | | | | | | | | |i
+ | | | | | | | | |assignment_expression
+ | | | | | | | | | |logical_or_expression
+ | | | | | | | | | | |logical_and_expression
+ | | | | | | | | | | | |equality_expression
+ | | | | | | | | | | | | |relational_expression
+ | | | | | | | | | | | | | |additive_expression
+ | | | | | | | | | | | | | | |+
+ | | | | | | | | | | | | | | |additive_expression
+ | | | | | | | | | | | | | | | |multiplicative_expression
+ | | | | | | | | | | | | | | | | |primary_expression
+ | | | | | | | | | | | | | | | | | |a
+ | | | | | | | | | | | | | | |multiplicative_expression
+ | | | | | | | | | | | | | | | |primary_expression
+ | | | | | | | | | | | | | | | | |2
+ | | | |statement
+ | | | | |expression_statement
+ | | | | | |expression
+ | | | | | | |assignment_expression
+ | | | | | | | |j
+ | | | | | | | |assignment_expression
+ | | | | | | | | |logical_or_expression
+ | | | | | | | | | |logical_and_expression
+ | | | | | | | | | | |equality_expression
+ | | | | | | | | | | | |relational_expression
+ | | | | | | | | | | | | |<
+ | | | | | | | | | | | | |relational_expression
+ | | | | | | | | | | | | | |additive_expression
+ | | | | | | | | | | | | | | |multiplicative_expression
+ | | | | | | | | | | | | | | | |primary_expression
+ | | | | | | | | | | | | | | | | |3
+ | | | | | | | | | | | | |additive_expression
+ | | | | | | | | | | | | | |multiplicative_expression
+ | | | | | | | | | | | | | | |primary_expression
+ | | | | | | | | | | | | | | | |2

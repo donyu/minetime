@@ -1,12 +1,15 @@
 import unittest
 import sys
 import ply.yacc as yacc
-from textwrap import dedent
+from mt_test_cases import MTTests
+from os.path import join
 
 sys.path.append('..')
 import yaccing
+from textwrap import dedent
 from lexing import Mtlex
 
+test_dir = 'testfiles'
 
 class TestYaccing(unittest.TestCase):
 
@@ -14,180 +17,52 @@ class TestYaccing(unittest.TestCase):
         self.parser = yaccing.parser
 
     def test_helloworld(self):
-        prog = """\
-def main() {
-    x = new Flatmap("testfiles/testmap",   500,500,500);
-    b = (10,20,30);
-    x.add(block(COBBLE), b);
-    x.close();
-}
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.helloworld)
 
     def test_compound(self):
-        prog = """\
-def main() {
-    { i=0;i=1;i=2; }
-}
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.compound)
 
     def test_while(self):
-        prog = """\
-def main() {
-    while (i=1) {i=1;i=1;i=1;}
-    i = 0;
-}
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.while_loop)
 
     def test_for(self):
-        prog = """\
-def main() {
-    for (i = 1; i = 1; i = 1) {
-        i = 1;
-    }
-}
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.for_loop)
 
     def test_if(self):
-        prog = """\
-def main() {
-    if (i=222220) {} 
-}
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.if_stmt)
 
     def test_if_else(self):
-        prog = """\
-def main() {
-    if (i = 1)
-       i = 2;
-    else {
-       i = 3;
-    }
-}
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.if_else)
 
     def test_if_elseif_else(self):
-        prog = """\
-def main() {
-    if (i = 1)
-       i = 2;
-    else if (i=2) {
-       i = 3;
-    } else
-       i = 4;
-}
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.if_elseif_else)
 
     def test_0_bug(self):
         """
-        BUG: Does not display 0 when assigned
+        bug: does not display 0 when assigned
         """
-        prog = """\
-def main() {
-    i = 0;
-}
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.zero_bug)
 
     def test_relations_and_arithmetic(self):
-        prog = """\
-def main() {
-    a && b;
-    a || b;
-    a == b;
-    a != b;
-    a > b;
-    a < b;
-    a >= b;
-    a <= b;
-    a + b;
-    2 - 3;
-    3 * 3;
-    3 / 3;
-}
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.relations_arithmetic)
 
     def test_empty_function(self):
-        prog = """\
-def main(1,2) {
-}
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.empty_function)
 
     def test_complicated(self):
-        prog = """\
-def main() {
-    a * (b - 3) + 3 || 5;
-}
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.complicated)
 
     def test_external(self):
-        prog = """\
-i = 1;
-
-def f(1, 2) {
-}
-
-def main() {
-    if (a > 3) {
-        i;
-    }
-}
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.external)
 
     def test_return(self):
-        prog = """\
-
-def main() {
-    i = 1;
-    return 1;
-    return;
-}
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.return_stmt)
 
     def test_assignment(self):
-        prog = """\
-def main() {
-    i = a + 2;
-    j = 3 < 2;
-}
-               """
-        self.print_result(prog)
-
-    def test_error(self):
-        prog = """\
-i = 0;
-h
-               """
-        self.print_result(prog)
-    
-    def test_string_literal(self):
-        prog = """\
-i = "hello world";
-               """
-        self.print_result(prog)
-
-    def test_comments(self):
-        prog = """\
-i = "hello"; $ hello
-$*
-hello hello
-hello hello*$
-               """
-        self.print_result(prog)
+        self.print_result(MTTests.assignment)
 
     def print_result(self, prog):
-        result = self.parser.parse(dedent(prog))
+        result = self.parser.parse(prog)
         print
         print result
 

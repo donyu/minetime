@@ -1,0 +1,14 @@
+translation_unit
+ |external_declaration
+ | |function_definition
+ | | |main
+ | | |parameter_list
+ | | | |parameter_list
+ | | | | |parameter_declaration
+ | | | | | |initializer
+ | | | | | | |primary_expression
+ | | | | | | | |1
+ | | | |parameter_declaration
+ | | | | |initializer
+ | | | | | |primary_expression
+ | | | | | | |2

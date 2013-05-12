@@ -1,0 +1,69 @@
+translation_unit
+ |translation_unit
+ | |translation_unit
+ | | |external_declaration
+ | | | |statement
+ | | | | |expression_statement
+ | | | | | |expression
+ | | | | | | |assignment_expression
+ | | | | | | | |i
+ | | | | | | | |assignment_expression
+ | | | | | | | | |logical_or_expression
+ | | | | | | | | | |logical_and_expression
+ | | | | | | | | | | |equality_expression
+ | | | | | | | | | | | |relational_expression
+ | | | | | | | | | | | | |additive_expression
+ | | | | | | | | | | | | | |multiplicative_expression
+ | | | | | | | | | | | | | | |primary_expression
+ | | | | | | | | | | | | | | | |1
+ | |external_declaration
+ | | |function_definition
+ | | | |f
+ | | | |parameter_list
+ | | | | |parameter_list
+ | | | | | |parameter_declaration
+ | | | | | | |initializer
+ | | | | | | | |primary_expression
+ | | | | | | | | |1
+ | | | | |parameter_declaration
+ | | | | | |initializer
+ | | | | | | |primary_expression
+ | | | | | | | |2
+ |external_declaration
+ | |function_definition
+ | | |main
+ | | |parameter_list
+ | | |statement_list
+ | | | |statement
+ | | | | |selection_statement
+ | | | | | |expression
+ | | | | | | |assignment_expression
+ | | | | | | | |logical_or_expression
+ | | | | | | | | |logical_and_expression
+ | | | | | | | | | |equality_expression
+ | | | | | | | | | | |relational_expression
+ | | | | | | | | | | | |>
+ | | | | | | | | | | | |relational_expression
+ | | | | | | | | | | | | |additive_expression
+ | | | | | | | | | | | | | |multiplicative_expression
+ | | | | | | | | | | | | | | |primary_expression
+ | | | | | | | | | | | | | | | |a
+ | | | | | | | | | | | |additive_expression
+ | | | | | | | | | | | | |multiplicative_expression
+ | | | | | | | | | | | | | |primary_expression
+ | | | | | | | | | | | | | | |3
+ | | | | | |statement
+ | | | | | | |compound_statement
+ | | | | | | | |statement_list
+ | | | | | | | | |statement
+ | | | | | | | | | |expression_statement
+ | | | | | | | | | | |expression
+ | | | | | | | | | | | |assignment_expression
+ | | | | | | | | | | | | |logical_or_expression
+ | | | | | | | | | | | | | |logical_and_expression
+ | | | | | | | | | | | | | | |equality_expression
+ | | | | | | | | | | | | | | | |relational_expression
+ | | | | | | | | | | | | | | | | |additive_expression
+ | | | | | | | | | | | | | | | | | |multiplicative_expression
+ | | | | | | | | | | | | | | | | | | |primary_expression
+ | | | | | | | | | | | | | | | | | | | |i
