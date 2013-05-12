@@ -1,6 +1,7 @@
 import sys
 import StringIO
 import types
+import re
 
 class Traverse(object):
 
@@ -463,11 +464,8 @@ class Traverse(object):
         if tree.leaf:
             if tree.leaf == "block":
                 x = self.flist[tree.leaf]
-                try:
-                    y = self.dispatch(tree.children[0],"block")
-                    return x + "(" + y + ")"
-                except:
-                    raise Exception("Invalid Number of arguments/Argument for Block")
+                y = self.dispatch(tree.children[0],"block")
+                return x + "(" + y + ")"
             if tree.leaf in self.flist:
                 x = self.flist[tree.leaf]
             else:  
@@ -490,7 +488,7 @@ class Traverse(object):
 
     def get_type(self, param):
         """given a symbol variable or primary expression, will return its type"""
-        if param in self.all_symbols:
+        if type(param) == str and not re.search(r'"(\\.|[^"])*"', param):
             if param in self.symbols:
                 return self.symbols[param]
             else:
