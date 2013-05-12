@@ -13,12 +13,20 @@ class Traverse(object):
                       "close": "saveInPlace"}
         # function argument types for type-checking
         self.fargs = {"Flatmap": [str, int, int, int],
-                      "Point": [int, int, int]}
-        self.class_meths = {"MAP": {
-                                'add': ['block', 'POINT'], 
-                                'close': []
+                      "Point": [int, int, int],
+                      "List": "every"}
+        self.class_meths = {"LIST": {
+                                'append': "every",
+                                'get': [int],
+                                'delete': [int]
                                 }
                             }
+        self.class_meth_impls = {"LIST": {
+                'append': (lambda name, params : '%s.append(%s)' % (name, params)),
+                'get': (lambda name, params : '%s[%s]' % (name, params)),
+                'delete': (lambda name, params : 'del %s[%s]' % (name, params))
+            }
+        }
         # will be used for scope checking 
         self.var_scopes = [[]]
         self.scope_depth = 0
@@ -283,12 +291,33 @@ class Traverse(object):
 
     def _class_method_expression(self,tree,flag=None):
         s = tree.leaf
-        a = self.dispatch(tree.children[0],s)
+        a = self.dispatch(tree.children[0], s)
         return a
 
     def _function_expression(self,tree,flag=None): # not complete
-        if tree.leaf == "add":
-            return self.add_method(tree,flag)
+        if self.symbols.get(flag) == "MAP":
+            if tree.leaf == "add":
+                return self.add_method(tree,flag)
+            else:
+                return flag + "." + self.flist[tree.leaf] + "()"
+        elif flag:
+            if self.symbols.get(flag) in self.class_meths:
+                class_methods = self.class_meths[self.symbols.get(flag)]
+                print tree.leaf
+                if tree.leaf in class_methods:
+                    params = self.dispatch(tree.children[0],flag)
+                    typed_params = [self.num_or_str(param) for param in params]
+                    init_args = [self.get_type(param) for param in typed_params]
+                    if class_methods[tree.leaf] != "every":
+                        for (e_p, p) in zip(class_methods[tree.leaf], init_args):
+                            if e_p != "all" and e_p != p:
+                                raise Exception("Class Method %s of %s excepted %s but got %s"
+                                    % (tree.leaf, flag, class_methods[tree.leaf], init_args))
+
+                    s = self.listtoparams(params)
+                    s = self.class_meth_impls[self.symbols.get(flag)][tree.leaf](flag, s)
+                    print s
+                    return s
         elif tree.leaf in self.flist:
             if tree.leaf in self.flistsymbol:
                 if not self.symbols.get(flag) == self.flistsymbol[tree.leaf]:
@@ -304,7 +333,7 @@ class Traverse(object):
                     typed_params = [self.num_or_str(param) for param in params]
                     init_args = [self.get_type(param) for param in typed_params]
                     print tree.leaf, init_args, params, self.symbols
-                    if init_args != self.fargs[tree.leaf]:
+                    if self.fargs[tree.leaf] != "every" and init_args != self.fargs[tree.leaf]:
                         raise Exception("Function Type Check Error for %s, expected %s but got %s" 
                             % (tree.leaf, str(self.fargs[tree.leaf]), str(init_args)))
                 s = self.listtoparams(params)
@@ -351,6 +380,11 @@ class Traverse(object):
                 elif x[0] == "Point":
                     self.symbol_add_helper(tree.leaf, "POINT")
                     return self.point_method(tree.leaf, x[1])
+                elif x[0] == "List":
+                    self.symbol_add_helper(tree.leaf, "LIST")
+
+                    list_init = str([int(e) for e in x[1] if self.isNum(e)])
+                    return "%s = %s" % (tree.leaf, list_init)
             else: # assigning a point right now
                 if x in self.tempPoints:
                     self.symbols[tree.leaf] = "POINT"
@@ -509,7 +543,7 @@ class Traverse(object):
                 if tree.leaf in self.fargs:
                     typed_params = [self.num_or_str(param) for param in params]
                     init_args = [self.get_type(param) for param in typed_params]
-                    if init_args != self.fargs[tree.leaf]:
+                    if self.fargs[tree.leaf] != "every" and init_args != self.fargs[tree.leaf]:
                         raise Exception("Initializer Type Check Error for %s, excepted %s but got %s" 
                             % (tree.leaf, str(self.fargs[tree.leaf]), str(init_args)))
                 return (x, params)

@@ -226,6 +226,8 @@ def p_initializer(p):
     '''
     if len(p) == 2:
         p[0] = Node('initializer', [p[1]])
+    elif len(p) == 4:
+        p[0] = Node('initailizer', [p[2]], 'list')
     else:
         p[0] = Node('initializer', [p[3]], p[1])
 
@@ -368,6 +370,11 @@ def main() {
     if (foo()) {
         b = 3;
     }
+    y = 100 - a;
+    h = new List(3, 4);
+    h.append(5);
+    h.get(0);
+    h.delete(0);
     x = new Flatmap("testfiles/testmap", 500, 500, 500);
     c = new Point(0, 0, 0);
     x.add(block(STONE), c);
