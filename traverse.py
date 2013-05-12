@@ -18,6 +18,9 @@ class Traverse(object):
                                 'close': []
                                 }
                             }
+        # will be used for scope checking 
+        self.var_scopes = [[]]
+        self.scope_depth = 0
         self.flistsymbol = {"close" : "MAP"}
         self.blocks = {"STONE":1,
                        "GRASS":2,
@@ -180,7 +183,7 @@ class Traverse(object):
                        "CARPET":171,
                        "HARDENEDCLAY":172
                        }
-                self.relops = {'<', '>', '<=', '>=', '==', '!=',
+        self.relops = {'<', '>', '<=', '>=', '==', '!=',
                        '+', '-', '*', '/', '%'}
         self.future_imports = []
         self.tempPoints = set()
@@ -202,8 +205,6 @@ class Traverse(object):
         return s
 
     def getpython(self):
-        print self.symbols
-        print self.values
         return self.x
 
     def flatten(self, x):
@@ -220,12 +221,22 @@ class Traverse(object):
         self.f.write(text)
 
     def enter(self):
-        "Print ':', and increase the indentation."
+        "Print ':', and increase the indentation and create a new scope"
+        # initialize depth
+        self.scope_depth += 1
+        self.var_scopes.append([])
         self._indent += 1
         return ":"
 
     def leave(self):
-        "Decrease the indentation level."
+        "Decrease the indentation level and remove out-of-scope symbols"
+        # remove symbols from this scope and then return s
+        for var in self.var_scopes[self.scope_depth]:
+            del self.symbols[var]
+            if var in self.values:
+                del self.values[var]
+        del self.var_scopes[self.scope_depth]
+        self.scope_depth -= 1
         self._indent -= 1
 
     # calls the function corresponding to the name of the node of the tree. Call on a single node and not a list
@@ -306,6 +317,8 @@ class Traverse(object):
         if not tree.leaf:
             return x
         else:
+            # add x to the scoping dict to be removed when out of scope
+            self.var_scopes[self.scope_depth].append(tree.leaf)
             if type(x) is tuple:
                 if x[0] == "Flatmap": 
                     self.symbols[tree.leaf] = "MAP" # add to symbol table
@@ -318,10 +331,10 @@ class Traverse(object):
                     self.symbols[tree.leaf] = "POINT"
                     self.tempPoints.remove(x)
                 elif self.isNum(x): # int or string
-                    self.symbols[tree.leaf] = "INT"
+                    self.symbols[tree.leaf] = int
                     self.values[tree.leaf] = self.isNum(x)
                 else:
-                    self.symbols[tree.leaf] = "STRING"
+                    self.symbols[tree.leaf] = str
                 return tree.leaf + "=" + x
 
     def listtoparams(self,l,x=None):
@@ -374,29 +387,24 @@ class Traverse(object):
         return self.dispatch(tree.children[0],flag)
 
     def flatmap_method(self, name, param):
-        if len(param) != 4:
-            raise Exception("Wrong number of params passed to Flatmap")
-        elif not (self.checkint(param[1]) and self.checkint(param[2]) and self.checkint(param[3])):
-            raise Exception("Parameters passed were not integers for map size")
+        if self.getint(param[1]) and self.getint(param[2]) and self.getint(param[3]):
+            sizex = self.getint(param[1])
+            sizey = self.getint(param[2])
+            sizez = self.getint(param[3])
+            x = str(int(int(sizex) * 1/2 * -1))
+            y = str(0)
+            z = str(int(int(sizez) * 1/2 * -1))
+            if sizey > 255:
+                sizey = 255
+            size = "(" + str(sizex) + "," + str(sizey) + "," + str(sizez) + ")"
+            point = "(" + x + "," + y + "," + z + ")"
         else:
-            if self.getint(param[1]) and self.getint(param[2]) and self.getint(param[3]):
-                sizex = self.getint(param[1])
-                sizey = self.getint(param[2])
-                sizez = self.getint(param[3])
-                x = str(int(int(sizex) * 1/2 * -1))
-                y = str(0)
-                z = str(int(int(sizez) * 1/2 * -1))
-                if sizey > 255:
-                    sizey = 255
-                size = "(" + str(sizex) + "," + str(sizey) + "," + str(sizez) + ")"
-                point = "(" + x + "," + y + "," + z + ")"
-            else:
-                point = "(" + param[1] + "*-0.5," + param[2] + "*-0.5," + param[3] + "*-0.5)"
-                size = "(" + param[1] + "," + param[2] + "," + param[3] + ")"
-            fline = "mclevel.MCInfdevOldLevel(" + param[0] + ", create=True)"
-            line = name + ".createChunksInBox(BoundingBox(" + point + "," + size + "))"
-            comp = name + "=" + fline + "\n" + line
-            return comp
+            point = "(" + param[1] + "*-0.5," + param[2] + "*-0.5," + param[3] + "*-0.5)"
+            size = "(" + param[1] + "," + param[2] + "," + param[3] + ")"
+        fline = "mclevel.MCInfdevOldLevel(" + param[0] + ", create=True)"
+        line = name + ".createChunksInBox(BoundingBox(" + point + "," + size + "))"
+        comp = name + "=" + fline + "\n" + line
+        return comp
 
     def point_method(self, name, param):
         if len(param) != 3:
@@ -455,6 +463,7 @@ class Traverse(object):
                 x = tree.leaf
             if tree.children:
                 params = self.dispatch(tree.children[0],flag)
+                print params
                 # initializer argument type checking
                 if tree.leaf in self.fargs:
                     typed_params = [self.num_or_str(param) for param in params]
@@ -601,6 +610,11 @@ class Traverse(object):
                 return ret_val
 
     def _function_definition(self, tree, flag=None):
+        # initialize depth
+        self.scope_depth += 1
+        self.var_scopes.append([])
+
+        # dispatch tree now
         fname = tree.leaf
         s = "def " + tree.leaf + "("
         if len(tree.children) == 2:
@@ -622,7 +636,6 @@ class Traverse(object):
             self.enter()
             s += self.fill(r)
             self.leave()
-            return s
         else:
             p = self.dispatch(tree.children[0],flag)
             comma = False
@@ -634,7 +647,7 @@ class Traverse(object):
                 s += a
                 self.waitingfor.add(a)
             s = s + "):"+"\n"
-            return s
+        return s
 
     def _return_statement(self, tree, flag=None):
         if tree.children:
