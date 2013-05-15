@@ -74,7 +74,7 @@ class Mtlex:
 
     # A regular expression rule with some action code
     def t_NUMBER(self,t):
-        r'\d+'
+        r'(-)?\d+'
         # BUG: FIX, DON. 0 DOES NOT WORKKKK
         # TODO: UNARY MINUS OR FORCE NEGATIVE NUMBER?
         t.value = int(t.value)    
