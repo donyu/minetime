@@ -12,7 +12,8 @@ class Mtlex:
                 'return' : 'RETURN',
                 'new' : 'NEW',
                 'true' : 'TRUE',
-                'false' : 'FALSE'
+                'false' : 'FALSE',
+                'class' : 'CLASS'
                 }
 
     tokens = ['NUMBER',
@@ -68,6 +69,7 @@ class Mtlex:
     t_COMMA = r','
     t_DOTOPERATOR = r'\.'
     NUMBER =  r'\d+'
+
     # t_POINT = t_LPAREN + NUMBER + t_COMMA + NUMBER + t_COMMA + NUMBER + t_RPAREN
 
     # A regular expression rule with some action code
@@ -91,7 +93,7 @@ class Mtlex:
     # Skips over comment tokens
     t_ignore_COMMENT = r'\$(.*)(\n)?'
 
-    t_ignore_ML_COMMENT = r'\$\*[^\$\*]*\*\$'
+    t_ignore_ML_COMMENT = r'\$\*[^(\$\*)]*\*\$'
 
     # A string containing ignored characters (spaces and tabs)
     t_ignore  = ' \t' 
@@ -118,11 +120,13 @@ class Mtlex:
         return tok_str
 
 # m = Mtlex()
-# data = '''
-# map = Flatmap("testmap.dat",500,500) /* hi */
-# map.add(block(COBBLE), (0,0,0))
-# map.close()
-# '''
+data = '''
+def main() {
+map = Flatmap("testmap.dat",100,100, 100);
+map.add(block(COBBLESTONE), (0,0,0));
+map.close();
+}
+'''
 # m.build()           # Build the lexer
 # m.test(data)     # Test it
 
@@ -130,8 +134,4 @@ if __name__ == "__main__":
     m = Mtlex()
     m.build()
     l = m.get_lexer()
-    print "Enter a string to be tokenized"
-    while 1:
-        line = raw_input()
-        print m.tok_str(line)
-        print "Enter a string to be tokenized"
+    print m.tok_str(data)
