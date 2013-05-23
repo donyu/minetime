@@ -7,16 +7,18 @@ TODO
 ----
 
 Still to do
+
+
+Functions 
+
+
+Done
 * TYPE CHECKING AND FUNCTION SCOPING AND STUFF 
+* symbol table with list of functions and the arguments they take in and their names
+* type checking - some of it happens at runtime, but we can check if the number of arguements etc is fine 
 * Make grammar handle elsif - done?
 * Functions and scope checking
 * Figuring out what to do for "for" loops
-
-Functions 
-* symbol table with list of functions and the arguments they take in and their names
-* type checking - some of it happens at runtime, but we can check if the number of arguements etc is fine 
-
-Done
 * Make grammar handle statement like if (x>3) or if (x==3) - done
 * Traversal for if statments - done
 * Traversal for if else - done 
